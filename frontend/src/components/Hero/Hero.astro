@@ -1,0 +1,35 @@
+---
+import { PortableText } from "astro-portabletext";
+const { hero } = Astro.props;
+---
+
+<div class="hero">
+  {hero.eyebrow && <p class="eyebrow">{hero.eyebrow}</p>}
+  {
+    hero.title && (
+      <h1>
+        <PortableText value={hero.title} />
+      </h1>
+    )
+  }
+  <my-counter></my-counter>
+</div>
+
+<script>
+  import "./Hero.tsx";
+</script>
+
+<style>
+  .hero {
+    background-color: #f0f0f0;
+    border: 1px solid #000;
+    padding: 2rem;
+  }
+
+  .eyebrow {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+</style>

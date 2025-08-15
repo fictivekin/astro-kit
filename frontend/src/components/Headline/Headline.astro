@@ -1,0 +1,31 @@
+---
+import { PortableText } from "astro-portabletext";
+const { headline } = Astro.props;
+---
+
+<div class="headline">
+  {headline.eyebrow && <p class="eyebrow">{headline.eyebrow}</p>}
+  {
+    headline.title && (
+      <h2>
+        <PortableText value={headline.title} />
+      </h2>
+    )
+  }
+  {headline.body && <PortableText value={headline.body} />}
+</div>
+
+<style>
+  .headline {
+    background-color: #f0f0f0;
+    border: 1px solid #000;
+    padding: 2rem;
+  }
+
+  .eyebrow {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+</style>
