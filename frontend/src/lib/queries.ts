@@ -1,0 +1,80 @@
+import { sanityClient } from "./sanity";
+
+const sectionFields = `
+  _type == "ctaBanner" => {
+    _type,
+    eyebrow,
+    title,
+    body,
+    textAlignment
+  },
+  _type == "feature" => {
+    _type,
+    eyebrow,
+    title,
+    body,
+    textAlignment
+  },
+  _type == "headline" => {
+    _type,
+    eyebrow,
+    title,
+    body,
+    textAlignment
+  },
+  _type == "hero" => {
+    _type,
+    eyebrow,
+    title,
+  },
+  _type == "multicard" => {
+    _type,
+    eyebrow,
+    title,
+    body,
+    textAlignment
+  }
+`;
+
+const sectionProjections = `
+  _type == 'linkedSection' || _type == 'reference' => @->{
+    ${sectionFields}
+  },
+  ${sectionFields}
+`;
+
+export async function fetchHomepage() {
+  return await sanityClient.fetch(
+    `*[_type == "page" && _id == "homepage"][0] {
+      ...,
+      "slug": select(
+        _id == "homepage" => "homepage",
+        _id == "notFoundPage" => "404",
+        slug.current
+      ),
+      "sections": sections[] {
+        ${sectionProjections}
+      },
+      noIndex
+    }`
+  );
+}
+
+export async function fetchPageBySlug(slug: string) {
+  return await sanityClient.fetch(
+    `*[_type == "page" && slug.current == $slug][0] {
+      ...,
+      "slug": select(
+        _id == "homepage" => "homepage",
+        _id == "notFoundPage" => "404",
+        slug.current
+      ),
+      "sections": sections[] {
+        ${sectionProjections}
+      },
+      noIndex
+    }`,
+    { slug }
+  );
+}
+

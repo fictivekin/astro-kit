@@ -1,15 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { sanityClient } from "../lib/sanity";
-import Hero from "../components/Hero/Hero.astro";
-import Headline from "../components/Headline/Headline.astro";
-
-// Component mapping
-const componentMap: Record<string, any> = {
-  hero: Hero,
-  headline: Headline,
-  // Add more components here as you create them
-};
+import { componentMap } from "../lib/componentMap";
+import { fetchPageBySlug } from "../lib/queries";
 
 // Get all pages for static generation
 export async function getStaticPaths() {
@@ -26,41 +19,7 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 
-// Query the page from Sanity by slug
-const page = await sanityClient.fetch(
-  `*[_type == "page" && slug.current == $slug][0] {
-        ...,
-        "slug": select(
-            _id == "homepage" => "homepage",
-            _id == "notFoundPage" => "404",
-            slug.current
-        ),
-        "sections": sections[] {
-            _type == 'linkedSection' || _type == 'reference' => @->,
-            _type != 'inkedSection' => @,
-
-            _type == 'reference' => {
-                // Hoist the referenced module's _type value
-                // Used by DynamicComponent, et al
-                "_type": @->_type,
-            },
-        }{
-            ...,
-						_type == "hero" => {
-							eyebrow,
-							title,
-						},
-            _type == "headline" => {
-              eyebrow,
-              title,
-              body,
-              textAlignment
-            }
-        },
-        noIndex
-    }`,
-  { slug }
-);
+const page = await fetchPageBySlug(slug);
 
 // Return 404 if page not found
 if (!page) {
@@ -82,4 +41,3 @@ if (!page) {
     })
   }
 </Layout>
-
