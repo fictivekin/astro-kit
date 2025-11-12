@@ -1,17 +1,13 @@
 ---
 import { PortableText } from "astro-portabletext";
+import Heading from "@/components/elements/Heading/Heading.astro";
+
 const { headline } = Astro.props;
 ---
 
 <div class="headline">
   {headline.eyebrow && <p class="eyebrow">{headline.eyebrow}</p>}
-  {
-    headline.title && (
-      <h2>
-        <PortableText value={headline.title} />
-      </h2>
-    )
-  }
+  <Heading text={headline.title} semanticLevel="h2" />
   {headline.body && <PortableText value={headline.body} />}
 </div>
 

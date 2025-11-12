@@ -1,6 +1,200 @@
 ---
 import { PortableText } from "astro-portabletext";
+import Heading from "@/components/elements/Heading/Heading.astro";
+import Button from "@/components/elements/Button/Button.astro";
+
 const { ctaBanner } = Astro.props;
+
+const {
+  eyebrow,
+  title,
+  body,
+  alignment = 'center',
+  theme = 'light',
+  media,
+  cta,
+} = ctaBanner;
 ---
 
-<div class="cta-banner">Hello from CtaBanner!</div>
+<section class={`cta-banner cta-banner--${theme} cta-banner--align-${alignment}`}>
+  <div class="cta-banner__container">
+    {media && media.type === 'image' && media.image?.asset && (
+      <div class="cta-banner__media">
+        <img
+          src={media.image.asset.url}
+          alt={media.image.altText || ''}
+          class="cta-banner__image"
+        />
+      </div>
+    )}
+    
+    {media && media.type === 'video' && media.video?.asset && (
+      <div class="cta-banner__media">
+        <video
+          src={media.video.asset.url}
+          class="cta-banner__video"
+          autoplay
+          loop
+          muted
+          playsinline
+        />
+      </div>
+    )}
+
+    <div class="cta-banner__content">
+      {eyebrow && <p class="cta-banner__eyebrow">{eyebrow}</p>}
+      
+      {title && (
+        <div class="cta-banner__title">
+          <Heading text={title} semanticLevel="h2" />
+        </div>
+      )}
+      
+      {body && (
+        <div class="cta-banner__body">
+          <PortableText value={body} />
+        </div>
+      )}
+      
+      {cta && cta.length > 0 && (
+        <div class="cta-banner__cta">
+          {cta.map((button: any) => (
+            <Button
+              label={button.label}
+              variant={button.variant}
+              size={button.size}
+              linkType={button.linkType}
+              internalLink={button.internalLink}
+              externalLink={button.externalLink}
+              anchorLink={button.anchorLink}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-banner {
+    padding: 4rem 2rem;
+    width: 100%;
+  }
+
+  .cta-banner--light {
+    background-color: #f8f8f8;
+    color: #333333;
+  }
+
+  .cta-banner--dark {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .cta-banner__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .cta-banner__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .cta-banner--align-left .cta-banner__content {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .cta-banner--align-center .cta-banner__content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .cta-banner--align-right .cta-banner__content {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .cta-banner__eyebrow {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .cta-banner--light .cta-banner__eyebrow {
+    color: #666666;
+  }
+
+  .cta-banner--dark .cta-banner__eyebrow {
+    color: #aaaaaa;
+  }
+
+  .cta-banner__title {
+    margin: 0;
+  }
+
+  .cta-banner__title :global(h2) {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .cta-banner__body {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    max-width: 800px;
+  }
+
+  .cta-banner__body :global(p) {
+    margin: 0 0 1rem 0;
+  }
+
+  .cta-banner__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .cta-banner__cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .cta-banner--align-center .cta-banner__cta {
+    justify-content: center;
+  }
+
+  .cta-banner--align-right .cta-banner__cta {
+    justify-content: flex-end;
+  }
+
+  .cta-banner__media {
+    margin-bottom: 2rem;
+  }
+
+  .cta-banner__image,
+  .cta-banner__video {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .cta-banner {
+      padding: 3rem 1.5rem;
+    }
+
+    .cta-banner__title :global(h2) {
+      font-size: 2rem;
+    }
+
+    .cta-banner__body {
+      font-size: 1rem;
+    }
+  }
+</style>

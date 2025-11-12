@@ -6,4 +6,12 @@ import solidJs from '@astrojs/solid-js';
 // https://astro.build/config
 export default defineConfig({
   integrations: [solidJs()],
+  vite: {
+    resolve: {
+      alias: {
+        '@/components': '/src/components',
+        '@': '/src',
+      },
+    },
+  },
 });

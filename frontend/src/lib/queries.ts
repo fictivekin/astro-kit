@@ -6,7 +6,36 @@ const sectionFields = `
     eyebrow,
     title,
     body,
-    textAlignment
+    alignment,
+    theme,
+    media {
+      type,
+      image {
+        asset->{
+          _id,
+          url
+        },
+        altText
+      },
+      video {
+        asset->{
+          _id,
+          url
+        }
+      }
+    },
+    cta[] {
+      variant,
+      size,
+      label,
+      linkType,
+      internalLink->{
+        _type,
+        slug
+      },
+      externalLink,
+      anchorLink
+    }
   },
   _type == "feature" => {
     _type,

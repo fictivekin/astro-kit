@@ -1,0 +1,110 @@
+---
+interface Props {
+  label: string;
+  variant?: 'primary' | 'secondary' | 'tertiary';
+  size?: 'small' | 'regular' | 'large';
+  linkType?: 'internal' | 'external' | 'anchor';
+  internalLink?: {
+    _type: string;
+    slug?: {
+      current: string;
+    };
+  };
+  externalLink?: string;
+  anchorLink?: string;
+}
+
+const {
+  label,
+  variant = 'primary',
+  size = 'regular',
+  linkType,
+  internalLink,
+  externalLink,
+  anchorLink,
+} = Astro.props;
+
+// Determine the href based on link type
+let href = '#';
+let target = '_self';
+
+if (linkType === 'external' && externalLink) {
+  href = externalLink;
+  target = '_blank';
+} else if (linkType === 'internal' && internalLink?.slug?.current) {
+  href = `/${internalLink.slug.current}`;
+} else if (linkType === 'anchor' && anchorLink) {
+  href = anchorLink;
+}
+---
+
+<a
+  href={href}
+  target={target}
+  rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+  class={`button button--${variant} button--${size}`}
+>
+  {label}
+</a>
+
+<style>
+  .button {
+    display: inline-block;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-align: center;
+    border: 2px solid transparent;
+  }
+
+  /* Sizes */
+  .button--small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .button--regular {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .button--large {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+  }
+
+  /* Variants */
+  .button--primary {
+    background-color: #5dbea3;
+    color: #ffffff;
+  }
+
+  .button--primary:hover {
+    background-color: #4da88c;
+  }
+
+  .button--secondary {
+    background-color: transparent;
+    color: #5dbea3;
+    border-color: #5dbea3;
+  }
+
+  .button--secondary:hover {
+    background-color: #5dbea3;
+    color: #ffffff;
+  }
+
+  .button--tertiary {
+    background-color: transparent;
+    color: #333333;
+    border-color: transparent;
+    text-decoration: underline;
+  }
+
+  .button--tertiary:hover {
+    color: #5dbea3;
+  }
+</style>
+
