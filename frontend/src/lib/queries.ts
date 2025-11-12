@@ -74,15 +74,60 @@ const sectionFields = `
   },
   _type == "headline" => {
     _type,
+    theme,
     eyebrow,
     title,
+    subhead,
     body,
-    textAlignment
+    alignment,
+    cta[] {
+      variant,
+      size,
+      label,
+      linkType,
+      internalLink->{
+        _type,
+        slug
+      },
+      externalLink,
+      anchorLink
+    }
   },
   _type == "hero" => {
     _type,
+    theme,
     eyebrow,
     title,
+    subhead,
+    body,
+    media {
+      type,
+      image {
+        asset->{
+          _id,
+          url
+        },
+        altText
+      },
+      video {
+        asset->{
+          _id,
+          url
+        }
+      }
+    },
+    cta[] {
+      variant,
+      size,
+      label,
+      linkType,
+      internalLink->{
+        _type,
+        slug
+      },
+      externalLink,
+      anchorLink
+    }
   },
   _type == "multicard" => {
     _type,

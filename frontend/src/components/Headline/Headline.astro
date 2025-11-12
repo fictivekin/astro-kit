@@ -1,27 +1,203 @@
 ---
 import { PortableText } from "astro-portabletext";
 import Heading from "@/components/elements/Heading/Heading.astro";
+import Button from "@/components/elements/Button/Button.astro";
 
 const { headline } = Astro.props;
+
+const {
+  theme = "light",
+  eyebrow,
+  title,
+  subhead,
+  body,
+  alignment = "left",
+  cta,
+} = headline;
 ---
 
-<div class="headline">
-  {headline.eyebrow && <p class="eyebrow">{headline.eyebrow}</p>}
-  <Heading text={headline.title} semanticLevel="h2" />
-  {headline.body && <PortableText value={headline.body} />}
-</div>
+<section class={`headline headline--${theme} headline--align-${alignment}`}>
+  <div class="headline__container">
+    <div class="headline__content">
+      {eyebrow && <p class="headline__eyebrow">{eyebrow}</p>}
+
+      {
+        title && (
+          <div class="headline__title">
+            <Heading text={title} semanticLevel="h2" />
+          </div>
+        )
+      }
+
+      {
+        subhead && (
+          <div class="headline__subhead">
+            <PortableText value={subhead} />
+          </div>
+        )
+      }
+
+      {
+        body && (
+          <div class="headline__body">
+            <PortableText value={body} />
+          </div>
+        )
+      }
+
+      {
+        cta && cta.length > 0 && (
+          <div class="headline__cta">
+            {cta.map((button: any) => (
+              <Button
+                label={button.label}
+                variant={button.variant}
+                size={button.size}
+                linkType={button.linkType}
+                internalLink={button.internalLink}
+                externalLink={button.externalLink}
+                anchorLink={button.anchorLink}
+              />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
 
 <style>
   .headline {
-    background-color: #f0f0f0;
-    border: 1px solid #000;
-    padding: 2rem;
+    padding: 4rem 2rem;
+    width: 100%;
   }
 
-  .eyebrow {
+  .headline--light {
+    background-color: #ffffff;
+    color: #333333;
+  }
+
+  .headline--dark {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .headline__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .headline__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .headline--align-left .headline__content {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .headline--align-center .headline__content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .headline--align-right .headline__content {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .headline__eyebrow {
     font-size: 0.875rem;
+    font-weight: 600;
     text-transform: uppercase;
-    color: #666;
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .headline--light .headline__eyebrow {
+    color: #666666;
+  }
+
+  .headline--dark .headline__eyebrow {
+    color: #aaaaaa;
+  }
+
+  .headline__title {
+    margin: 0;
+  }
+
+  .headline__title :global(h2) {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .headline__subhead {
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .headline__subhead :global(p) {
+    margin: 0;
+  }
+
+  .headline__body {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    max-width: 800px;
+  }
+
+  .headline--align-center .headline__body {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .headline--align-right .headline__body {
+    margin-left: auto;
+  }
+
+  .headline__body :global(p) {
+    margin: 0 0 1rem 0;
+  }
+
+  .headline__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .headline__cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .headline--align-center .headline__cta {
+    justify-content: center;
+  }
+
+  .headline--align-right .headline__cta {
+    justify-content: flex-end;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .headline {
+      padding: 3rem 1.5rem;
+    }
+
+    .headline__title :global(h2) {
+      font-size: 2rem;
+    }
+
+    .headline__subhead {
+      font-size: 1.125rem;
+    }
+
+    .headline__body {
+      font-size: 1rem;
+    }
   }
 </style>

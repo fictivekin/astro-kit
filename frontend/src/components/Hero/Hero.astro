@@ -1,14 +1,91 @@
 ---
 import { PortableText } from "astro-portabletext";
-import Heading from "../elements/Heading/Heading.astro";
+import Heading from "@/components/elements/Heading/Heading.astro";
+import Button from "@/components/elements/Button/Button.astro";
+
 const { hero } = Astro.props;
+
+const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
 ---
 
-<div class="hero">
-  {hero.eyebrow && <p class="eyebrow">{hero.eyebrow}</p>}
-  <Heading text={hero.title} semanticLevel="h1" />
-  <my-counter></my-counter>
-</div>
+<section class={`hero hero--${theme}`}>
+  <div class="hero__container">
+    {
+      media && media.type === "image" && media.image?.asset && (
+        <div class="hero__media">
+          <img
+            src={media.image.asset.url}
+            alt={media.image.altText || ""}
+            class="hero__image"
+          />
+        </div>
+      )
+    }
+
+    {
+      media && media.type === "video" && media.video?.asset && (
+        <div class="hero__media">
+          <video
+            src={media.video.asset.url}
+            class="hero__video"
+            autoplay
+            loop
+            muted
+            playsinline
+          />
+        </div>
+      )
+    }
+
+    <div class="hero__content">
+      {eyebrow && <p class="hero__eyebrow">{eyebrow}</p>}
+
+      {
+        title && (
+          <div class="hero__title">
+            <Heading text={title} semanticLevel="h1" />
+          </div>
+        )
+      }
+
+      {
+        subhead && (
+          <div class="hero__subhead">
+            <PortableText value={subhead} />
+          </div>
+        )
+      }
+
+      {
+        body && (
+          <div class="hero__body">
+            <PortableText value={body} />
+          </div>
+        )
+      }
+
+      {
+        cta && cta.length > 0 && (
+          <div class="hero__cta">
+            {cta.map((button: any) => (
+              <Button
+                label={button.label}
+                variant={button.variant}
+                size={button.size}
+                linkType={button.linkType}
+                internalLink={button.internalLink}
+                externalLink={button.externalLink}
+                anchorLink={button.anchorLink}
+              />
+            ))}
+          </div>
+        )
+      }
+
+      <my-counter></my-counter>
+    </div>
+  </div>
+</section>
 
 <script>
   import "./Hero.tsx";
@@ -16,15 +93,133 @@ const { hero } = Astro.props;
 
 <style>
   .hero {
-    background-color: #f0f0f0;
-    border: 1px solid #000;
-    padding: 2rem;
+    padding: 6rem 2rem;
+    width: 100%;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
   }
 
-  .eyebrow {
+  .hero--light {
+    background-color: #f8f8f8;
+    color: #333333;
+  }
+
+  .hero--dark {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .hero__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 3rem;
+  }
+
+  .hero__media {
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .hero__image,
+  .hero__video {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+
+  .hero__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    max-width: 800px;
+  }
+
+  .hero__eyebrow {
     font-size: 0.875rem;
+    font-weight: 600;
     text-transform: uppercase;
-    color: #666;
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .hero--light .hero__eyebrow {
+    color: #666666;
+  }
+
+  .hero--dark .hero__eyebrow {
+    color: #aaaaaa;
+  }
+
+  .hero__title {
+    margin: 0;
+  }
+
+  .hero__title :global(h1) {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .hero__subhead {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .hero__subhead :global(p) {
+    margin: 0;
+  }
+
+  .hero__body {
+    font-size: 1.25rem;
+    line-height: 1.6;
+  }
+
+  .hero__body :global(p) {
+    margin: 0 0 1rem 0;
+  }
+
+  .hero__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .hero__cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .hero {
+      padding: 4rem 1.5rem;
+      min-height: 50vh;
+    }
+
+    .hero__container {
+      gap: 2rem;
+    }
+
+    .hero__title :global(h1) {
+      font-size: 2.5rem;
+    }
+
+    .hero__subhead {
+      font-size: 1.25rem;
+    }
+
+    .hero__body {
+      font-size: 1.125rem;
+    }
   }
 </style>
