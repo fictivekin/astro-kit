@@ -3,6 +3,3 @@ node_modules/
 
 # OS files (already in individual workspaces but good to have at root)
 .DS_Store
-
-# Workspace specific
-.cursor/
