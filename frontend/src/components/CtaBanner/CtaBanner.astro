@@ -9,68 +9,80 @@ const {
   eyebrow,
   title,
   body,
-  alignment = 'center',
-  theme = 'light',
+  alignment = "center",
+  theme = "light",
   media,
   cta,
 } = ctaBanner;
 ---
 
-<section class={`cta-banner cta-banner--${theme} cta-banner--align-${alignment}`}>
+<section
+  class={`cta-banner cta-banner--${theme} cta-banner--align-${alignment}`}
+>
   <div class="cta-banner__container">
-    {media && media.type === 'image' && media.image?.asset && (
-      <div class="cta-banner__media">
-        <img
-          src={media.image.asset.url}
-          alt={media.image.altText || ''}
-          class="cta-banner__image"
-        />
-      </div>
-    )}
-    
-    {media && media.type === 'video' && media.video?.asset && (
-      <div class="cta-banner__media">
-        <video
-          src={media.video.asset.url}
-          class="cta-banner__video"
-          autoplay
-          loop
-          muted
-          playsinline
-        />
-      </div>
-    )}
+    {
+      media && media.type === "image" && media.image?.asset && (
+        <div class="cta-banner__media">
+          <img
+            src={media.image.asset.url}
+            alt={media.image.altText || ""}
+            class="cta-banner__image"
+          />
+        </div>
+      )
+    }
+
+    {
+      media && media.type === "video" && media.video?.asset && (
+        <div class="cta-banner__media">
+          <video
+            src={media.video.asset.url}
+            class="cta-banner__video"
+            autoplay
+            loop
+            muted
+            playsinline
+          />
+        </div>
+      )
+    }
 
     <div class="cta-banner__content">
       {eyebrow && <p class="cta-banner__eyebrow">{eyebrow}</p>}
-      
-      {title && (
-        <div class="cta-banner__title">
-          <Heading text={title} semanticLevel="h2" />
-        </div>
-      )}
-      
-      {body && (
-        <div class="cta-banner__body">
-          <PortableText value={body} />
-        </div>
-      )}
-      
-      {cta && cta.length > 0 && (
-        <div class="cta-banner__cta">
-          {cta.map((button: any) => (
-            <Button
-              label={button.label}
-              variant={button.variant}
-              size={button.size}
-              linkType={button.linkType}
-              internalLink={button.internalLink}
-              externalLink={button.externalLink}
-              anchorLink={button.anchorLink}
-            />
-          ))}
-        </div>
-      )}
+
+      {
+        title && (
+          <div class="cta-banner__title">
+            <Heading text={title} semanticLevel="h2" />
+          </div>
+        )
+      }
+
+      {
+        body && (
+          <div class="cta-banner__body">
+            <PortableText value={body} />
+          </div>
+        )
+      }
+
+      {
+        cta && cta.length > 0 && (
+          <div class="cta-banner__cta">
+            {cta.map((button: any) => (
+              <Button
+                label={button.label}
+                variant={button.variant}
+                size={button.size}
+                linkType={button.linkType}
+                internalLink={button.internalLink}
+                externalLink={button.externalLink}
+                anchorLink={button.anchorLink}
+              />
+            ))}
+          </div>
+        )
+      }
     </div>
   </div>
 </section>

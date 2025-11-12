@@ -1,0 +1,243 @@
+---
+import { PortableText } from "astro-portabletext";
+import Heading from "@/components/elements/Heading/Heading.astro";
+
+interface Props {
+  card: {
+    media?: {
+      type?: string;
+      image?: {
+        asset?: {
+          _id: string;
+          url: string;
+        };
+        altText?: string;
+      };
+      video?: {
+        asset?: {
+          _id: string;
+          url: string;
+        };
+      };
+    };
+    eyebrow?: string;
+    title?: any;
+    subhead?: any;
+    body?: any;
+    makeClickable?: boolean;
+    link?: {
+      label?: string;
+      linkType?: string;
+      href?: string;
+      hash?: string;
+      page?: {
+        _type: string;
+        slug?: {
+          current: string;
+        };
+      };
+      simplePage?: {
+        _type: string;
+        slug?: {
+          current: string;
+        };
+      };
+      post?: {
+        _type: string;
+        slug?: {
+          current: string;
+        };
+      };
+      file?: {
+        asset?: {
+          _id: string;
+          url: string;
+        };
+      };
+    };
+  };
+}
+
+const { card } = Astro.props;
+
+// Determine card link if clickable
+let cardHref = "";
+let cardTarget = "_self";
+
+if (card.makeClickable && card.link) {
+  const link = card.link;
+
+  if (link.linkType === "href" && link.href) {
+    cardHref = link.href;
+    if (link.href.startsWith("http")) {
+      cardTarget = "_blank";
+    }
+  } else if (link.linkType === "hash" && link.hash) {
+    cardHref = link.hash;
+  } else if (link.linkType === "page" && link.page?.slug?.current) {
+    cardHref = `/${link.page.slug.current}`;
+  } else if (link.linkType === "simplePage" && link.simplePage?.slug?.current) {
+    cardHref = `/${link.simplePage.slug.current}`;
+  } else if (link.linkType === "post" && link.post?.slug?.current) {
+    cardHref = `/blog/${link.post.slug.current}`;
+  } else if (link.linkType === "file" && link.file?.asset?.url) {
+    cardHref = link.file.asset.url;
+    cardTarget = "_blank";
+  }
+}
+
+const CardWrapper = card.makeClickable && cardHref ? "a" : "div";
+---
+
+<CardWrapper
+  href={card.makeClickable ? cardHref : undefined}
+  target={card.makeClickable && cardTarget === "_blank" ? "_blank" : undefined}
+  rel={card.makeClickable && cardTarget === "_blank" ? "noopener noreferrer" : undefined}
+  class={`card ${card.makeClickable ? "card--clickable" : ""}`}
+>
+  {
+    card.media && card.media.type === "image" && card.media.image?.asset && (
+      <div class="card__media">
+        <img
+          src={card.media.image.asset.url}
+          alt={card.media.image.altText || ""}
+          class="card__image"
+        />
+      </div>
+    )
+  }
+
+  {
+    card.media && card.media.type === "video" && card.media.video?.asset && (
+      <div class="card__media">
+        <video
+          src={card.media.video.asset.url}
+          class="card__video"
+          autoplay
+          loop
+          muted
+          playsinline
+        />
+      </div>
+    )
+  }
+
+  <div class="card__content">
+    {card.eyebrow && <p class="card__eyebrow">{card.eyebrow}</p>}
+
+    {
+      card.title && (
+        <div class="card__title">
+          <Heading text={card.title} semanticLevel="h3" />
+        </div>
+      )
+    }
+
+    {
+      card.subhead && (
+        <div class="card__subhead">
+          <PortableText value={card.subhead} />
+        </div>
+      )
+    }
+
+    {
+      card.body && (
+        <div class="card__body">
+          <PortableText value={card.body} />
+        </div>
+      )
+    }
+  </div>
+</CardWrapper>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #f8f8f8;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card--clickable {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card--clickable:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .card__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background-color: #e0e0e0;
+  }
+
+  .card__image,
+  .card__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card__content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .card__eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #666666;
+    margin: 0;
+  }
+
+  .card__title {
+    margin: 0;
+  }
+
+  .card__title :global(h3) {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .card__subhead {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #555555;
+  }
+
+  .card__subhead :global(p) {
+    margin: 0;
+  }
+
+  .card__body {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #666666;
+  }
+
+  .card__body :global(p) {
+    margin: 0 0 0.5rem 0;
+  }
+
+  .card__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>
+

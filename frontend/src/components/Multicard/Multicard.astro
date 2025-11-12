@@ -1,6 +1,294 @@
 ---
 import { PortableText } from "astro-portabletext";
+import Heading from "@/components/elements/Heading/Heading.astro";
+import Button from "@/components/elements/Button/Button.astro";
+import Card from "@/components/elements/Card/Card.astro";
+
 const { multicard } = Astro.props;
+
+const {
+  theme = "light",
+  eyebrow,
+  title,
+  subhead,
+  body,
+  layout = "grid",
+  columns = "3",
+  cta,
+  multicardItems = [],
+} = multicard;
 ---
 
-<div class="multicard">Hello from Multicard!</div>
+<section class={`multicard multicard--${theme} multicard--${layout}`}>
+  <div class="multicard__container">
+    {
+      (eyebrow || title || subhead || body || (cta && cta.length > 0)) && (
+        <div class="multicard__header">
+          {eyebrow && <p class="multicard__eyebrow">{eyebrow}</p>}
+
+          {title && (
+            <div class="multicard__title">
+              <Heading text={title} semanticLevel="h2" />
+            </div>
+          )}
+
+          {subhead && (
+            <div class="multicard__subhead">
+              <PortableText value={subhead} />
+            </div>
+          )}
+
+          {body && (
+            <div class="multicard__body">
+              <PortableText value={body} />
+            </div>
+          )}
+
+          {cta && cta.length > 0 && (
+            <div class="multicard__cta">
+              {cta.map((button: any) => (
+                <Button
+                  label={button.label}
+                  variant={button.variant}
+                  size={button.size}
+                  linkType={button.linkType}
+                  internalLink={button.internalLink}
+                  externalLink={button.externalLink}
+                  anchorLink={button.anchorLink}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )
+    }
+
+    <div class={`multicard__grid multicard__grid--cols-${columns}`}>
+      {multicardItems.map((card: any) => <Card card={card} />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .multicard {
+    padding: 4rem 2rem;
+    width: 100%;
+  }
+
+  .multicard--light {
+    background-color: #ffffff;
+    color: #333333;
+  }
+
+  .multicard--dark {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .multicard__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .multicard__header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .multicard__eyebrow {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .multicard--light .multicard__eyebrow {
+    color: #666666;
+  }
+
+  .multicard--dark .multicard__eyebrow {
+    color: #aaaaaa;
+  }
+
+  .multicard__title {
+    margin: 0;
+  }
+
+  .multicard__title :global(h2) {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .multicard__subhead {
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .multicard__subhead :global(p) {
+    margin: 0;
+  }
+
+  .multicard__body {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  .multicard__body :global(p) {
+    margin: 0 0 1rem 0;
+  }
+
+  .multicard__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .multicard__cta {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  /* Grid Layout */
+  .multicard__grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .multicard__grid--cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .multicard__grid--cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .multicard__grid--cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Responsive Grid */
+  @media (max-width: 1024px) {
+    .multicard__grid--cols-4 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .multicard {
+      padding: 3rem 1.5rem;
+    }
+
+    .multicard__header {
+      margin-bottom: 2rem;
+    }
+
+    .multicard__title :global(h2) {
+      font-size: 2rem;
+    }
+
+    .multicard__subhead {
+      font-size: 1.125rem;
+    }
+
+    .multicard__body {
+      font-size: 1rem;
+    }
+
+    .multicard__grid--cols-3,
+    .multicard__grid--cols-4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .multicard__grid {
+      gap: 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .multicard__grid--cols-2,
+    .multicard__grid--cols-3,
+    .multicard__grid--cols-4 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Carousel Layout (basic implementation - can be enhanced with JS) */
+  .multicard--carousel .multicard__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .multicard--carousel .multicard__grid > * {
+    flex: 0 0 calc(33.333% - 1rem);
+    scroll-snap-align: start;
+  }
+
+  @media (max-width: 768px) {
+    .multicard--carousel .multicard__grid > * {
+      flex: 0 0 calc(50% - 0.75rem);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .multicard--carousel .multicard__grid > * {
+      flex: 0 0 calc(85% - 0.75rem);
+    }
+  }
+
+  /* Carousel Sidebar Layout */
+  .multicard--carousel-sidebar .multicard__container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .multicard--carousel-sidebar .multicard__header {
+    text-align: left;
+    margin: 0;
+  }
+
+  .multicard--carousel-sidebar .multicard__cta {
+    justify-content: flex-start;
+  }
+
+  .multicard--carousel-sidebar .multicard__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .multicard--carousel-sidebar .multicard__grid > * {
+    flex: 0 0 calc(50% - 0.75rem);
+    scroll-snap-align: start;
+  }
+
+  @media (max-width: 968px) {
+    .multicard--carousel-sidebar .multicard__container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .multicard--carousel-sidebar .multicard__header {
+      text-align: center;
+    }
+
+    .multicard--carousel-sidebar .multicard__cta {
+      justify-content: center;
+    }
+  }
+</style>

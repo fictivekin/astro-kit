@@ -39,10 +39,38 @@ const sectionFields = `
   },
   _type == "feature" => {
     _type,
-    eyebrow,
     title,
     body,
-    textAlignment
+    theme,
+    mediaSide,
+    media {
+      type,
+      image {
+        asset->{
+          _id,
+          url
+        },
+        altText
+      },
+      video {
+        asset->{
+          _id,
+          url
+        }
+      }
+    },
+    cta[] {
+      variant,
+      size,
+      label,
+      linkType,
+      internalLink->{
+        _type,
+        slug
+      },
+      externalLink,
+      anchorLink
+    }
   },
   _type == "headline" => {
     _type,
@@ -58,10 +86,72 @@ const sectionFields = `
   },
   _type == "multicard" => {
     _type,
+    theme,
     eyebrow,
     title,
+    subhead,
     body,
-    textAlignment
+    layout,
+    columns,
+    cta[] {
+      variant,
+      size,
+      label,
+      linkType,
+      internalLink->{
+        _type,
+        slug
+      },
+      externalLink,
+      anchorLink
+    },
+    multicardItems[] {
+      media {
+        type,
+        image {
+          asset->{
+            _id,
+            url
+          },
+          altText
+        },
+        video {
+          asset->{
+            _id,
+            url
+          }
+        }
+      },
+      eyebrow,
+      title,
+      subhead,
+      body,
+      makeClickable,
+      link {
+        label,
+        linkType,
+        href,
+        hash,
+        page->{
+          _type,
+          slug
+        },
+        simplePage->{
+          _type,
+          slug
+        },
+        post->{
+          _type,
+          slug
+        },
+        file {
+          asset->{
+            _id,
+            url
+          }
+        }
+      }
+    }
   }
 `;
 

@@ -1,6 +1,214 @@
 ---
 import { PortableText } from "astro-portabletext";
+import Heading from "@/components/elements/Heading/Heading.astro";
+import Button from "@/components/elements/Button/Button.astro";
+
 const { feature } = Astro.props;
+
+const {
+  title,
+  body,
+  theme = "light",
+  mediaSide = "left",
+  media,
+  cta,
+} = feature;
 ---
 
-<div class="feature">Hello from Feature!</div>
+<section class={`feature feature--${theme} feature--media-${mediaSide}`}>
+  <div class="feature__container">
+    {
+      media && media.type === "image" && media.image?.asset && (
+        <div class="feature__media">
+          <img
+            src={media.image.asset.url}
+            alt={media.image.altText || ""}
+            class="feature__image"
+          />
+        </div>
+      )
+    }
+
+    {
+      media && media.type === "video" && media.video?.asset && (
+        <div class="feature__media">
+          <video
+            src={media.video.asset.url}
+            class="feature__video"
+            autoplay
+            loop
+            muted
+            playsinline
+          />
+        </div>
+      )
+    }
+
+    <div class="feature__content">
+      {
+        title && (
+          <div class="feature__title">
+            <Heading text={title} semanticLevel="h2" />
+          </div>
+        )
+      }
+
+      {
+        body && (
+          <div class="feature__body">
+            <PortableText value={body} />
+          </div>
+        )
+      }
+
+      {
+        cta && cta.length > 0 && (
+          <div class="feature__cta">
+            {cta.map((button: any) => (
+              <Button
+                label={button.label}
+                variant={button.variant}
+                size={button.size}
+                linkType={button.linkType}
+                internalLink={button.internalLink}
+                externalLink={button.externalLink}
+                anchorLink={button.anchorLink}
+              />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .feature {
+    padding: 4rem 2rem;
+    width: 100%;
+  }
+
+  .feature--light {
+    background-color: #ffffff;
+    color: #333333;
+  }
+
+  .feature--dark {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .feature__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  /* Media on the left (default) */
+  .feature--media-left .feature__media {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .feature--media-left .feature__content {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* Media on the right */
+  .feature--media-right .feature__media {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .feature--media-right .feature__content {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .feature__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .feature__title {
+    margin: 0;
+  }
+
+  .feature__title :global(h2) {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .feature__body {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  .feature__body :global(p) {
+    margin: 0 0 1rem 0;
+  }
+
+  .feature__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .feature__cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .feature__media {
+    position: relative;
+    width: 100%;
+  }
+
+  .feature__image,
+  .feature__video {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    object-fit: cover;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 968px) {
+    .feature__container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .feature--media-left .feature__media,
+    .feature--media-right .feature__media {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .feature--media-left .feature__content,
+    .feature--media-right .feature__content {
+      grid-column: 1;
+      grid-row: 2;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .feature {
+      padding: 3rem 1.5rem;
+    }
+
+    .feature__title :global(h2) {
+      font-size: 2rem;
+    }
+
+    .feature__body {
+      font-size: 1rem;
+    }
+  }
+</style>
