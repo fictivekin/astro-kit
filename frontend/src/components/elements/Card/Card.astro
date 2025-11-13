@@ -57,9 +57,11 @@ interface Props {
       };
     };
   };
+  lazyLoad?: boolean;
+  semanticLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
-const { card } = Astro.props;
+const { card, lazyLoad = true, semanticLevel = "h3" } = Astro.props;
 
 // Determine card link if clickable
 let cardHref = "";
@@ -98,7 +100,7 @@ const CardWrapper = card.makeClickable && cardHref ? "a" : "div";
 >
   {card.media && (
     <div class="card__media">
-      <Media media={card.media} />
+      <Media media={card.media} lazyLoad={lazyLoad} />
     </div>
   )}
 
@@ -108,7 +110,7 @@ const CardWrapper = card.makeClickable && cardHref ? "a" : "div";
       {
         card.title?.length && (
           <div class="card__title">
-            <Heading text={card.title} semanticLevel="h3" />
+            <Heading text={card.title} semanticLevel={semanticLevel} />
           </div>
         )
       }

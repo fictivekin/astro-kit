@@ -4,7 +4,7 @@ import Heading from "@/components/elements/Heading/Heading.astro";
 import Button from "@/components/elements/Button/Button.astro";
 import Media from "@/components/elements/Media/Media.astro";
 
-const { ctaBanner } = Astro.props;
+const { ctaBanner, lazyLoad = true, semanticLevel = "h2" } = Astro.props;
 
 const {
   eyebrow,
@@ -24,7 +24,7 @@ const {
     {
       media && (
         <div class="cta-banner__media">
-          <Media media={media} />
+          <Media media={media} lazyLoad={lazyLoad} />
         </div>
       )
     }
@@ -35,7 +35,7 @@ const {
       {
         title?.length && (
           <div class="cta-banner__title">
-            <Heading text={title} semanticLevel="h2" />
+            <Heading text={title} semanticLevel={semanticLevel} />
           </div>
         )
       }

@@ -1,7 +1,12 @@
 ---
 import { Picture } from "astro:assets";
 
-const { media } = Astro.props;
+interface Props {
+  media: any;
+  lazyLoad?: boolean;
+}
+
+const { media, lazyLoad = true } = Astro.props;
 ---
 
 {
@@ -16,7 +21,7 @@ const { media } = Astro.props;
         width={media.image.asset.metadata?.dimensions?.width}
         height={media.image.asset.metadata?.dimensions?.height}
         class="media__image"
-        loading="lazy"
+        loading={lazyLoad ? "lazy" : "eager"}
       />
     </div>
   )
@@ -51,4 +56,3 @@ const { media } = Astro.props;
     object-fit: cover;
   }
 </style>
-

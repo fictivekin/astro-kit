@@ -4,7 +4,7 @@ import Heading from "@/components/elements/Heading/Heading.astro";
 import Button from "@/components/elements/Button/Button.astro";
 import Card from "@/components/elements/Card/Card.astro";
 
-const { multicard } = Astro.props;
+const { multicard, lazyLoad = true, semanticLevel = "h2" } = Astro.props;
 
 const {
   theme = "light",
@@ -28,7 +28,7 @@ const {
 
           {title?.length && (
             <div class="multicard__title">
-              <Heading text={title} semanticLevel="h2" />
+              <Heading text={title} semanticLevel={semanticLevel} />
             </div>
           )}
 
@@ -64,7 +64,11 @@ const {
     }
 
     <div class={`multicard__grid multicard__grid--cols-${columns}`}>
-      {multicardItems.map((card: any) => <Card card={card} />)}
+      {
+        multicardItems.map((card: any) => (
+          <Card card={card} lazyLoad={lazyLoad} semanticLevel="h3" />
+        ))
+      }
     </div>
   </div>
 </section>

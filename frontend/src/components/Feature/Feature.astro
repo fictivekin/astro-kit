@@ -4,7 +4,7 @@ import Heading from "@/components/elements/Heading/Heading.astro";
 import Button from "@/components/elements/Button/Button.astro";
 import Media from "@/components/elements/Media/Media.astro";
 
-const { feature } = Astro.props;
+const { feature, lazyLoad = true, semanticLevel = "h2" } = Astro.props;
 
 const {
   title,
@@ -19,14 +19,14 @@ const {
 <section class={`feature feature--${theme} feature--media-${mediaSide}`}>
   <div class="feature__container">
     <div class="feature__media">
-      {media && <Media media={media} />}
+      {media && <Media media={media} lazyLoad={lazyLoad} />}
     </div>
 
     <div class="feature__content">
       {
         title?.length && (
           <div class="feature__title">
-            <Heading text={title} semanticLevel="h2" />
+            <Heading text={title} semanticLevel={semanticLevel} />
           </div>
         )
       }

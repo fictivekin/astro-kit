@@ -4,7 +4,7 @@ import RichTextHeading from "@/components/elements/Heading/RichTextHeading.astro
 import Button from "@/components/elements/Button/Button.astro";
 import Media from "@/components/elements/Media/Media.astro";
 
-const { hero } = Astro.props;
+const { hero, lazyLoad = true, semanticLevel = "h1" } = Astro.props;
 
 const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
 ---
@@ -14,7 +14,7 @@ const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
     {
       media && (
         <div class="hero__media">
-          <Media media={media} />
+          <Media media={media} lazyLoad={lazyLoad} />
         </div>
       )
     }
@@ -25,7 +25,7 @@ const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
       {
         title?.length > 0 && (
           <div class="hero__title">
-            <RichTextHeading text={title} semanticLevel="h1" />
+            <RichTextHeading text={title} semanticLevel={semanticLevel} />
           </div>
         )
       }
