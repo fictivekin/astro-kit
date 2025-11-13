@@ -1,22 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { componentMap } from "../lib/componentMap";
+import SectionRenderer from "../components/SectionRenderer.astro";
 import { getEntry } from "astro:content";
 
 const homepage = await getEntry("home", "homepage");
 ---
 
 <Layout>
-  {
-    homepage?.data?.sections?.map((section: any) => {
-      const Component = componentMap[section._type];
-
-      if (Component) {
-        return <Component {...{ [section._type]: section }} />;
-      }
-
-      // Fallback for sections without a component
-      return <div>No component for: {section._type}</div>;
-    })
-  }
+  <SectionRenderer sections={homepage?.data?.sections} />
 </Layout>

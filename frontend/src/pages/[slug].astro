@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { componentMap } from "../lib/componentMap";
+import SectionRenderer from "../components/SectionRenderer.astro";
 import { getCollection, getEntry } from "astro:content";
 
 // Get all pages for static generation
@@ -23,16 +23,5 @@ if (!page) {
 ---
 
 <Layout>
-  {
-    page?.data?.sections?.map((section: any) => {
-      const Component = componentMap[section._type];
-
-      if (Component) {
-        return <Component {...{ [section._type]: section }} />;
-      }
-
-      // Fallback for sections without a component
-      return <div>No component for: {section._type}</div>;
-    })
-  }
+  <SectionRenderer sections={page?.data?.sections} />
 </Layout>

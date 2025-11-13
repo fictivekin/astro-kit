@@ -2,6 +2,7 @@
 import { PortableText } from "astro-portabletext";
 import Heading from "@/components/elements/Heading/Heading.astro";
 import Button from "@/components/elements/Button/Button.astro";
+import Media from "@/components/elements/Media/Media.astro";
 
 const { feature } = Astro.props;
 
@@ -17,32 +18,9 @@ const {
 
 <section class={`feature feature--${theme} feature--media-${mediaSide}`}>
   <div class="feature__container">
-    {
-      media && media.type === "image" && media.image?.asset && (
-        <div class="feature__media">
-          <img
-            src={media.image.asset.url}
-            alt={media.image.altText || ""}
-            class="feature__image"
-          />
-        </div>
-      )
-    }
-
-    {
-      media && media.type === "video" && media.video?.asset && (
-        <div class="feature__media">
-          <video
-            src={media.video.asset.url}
-            class="feature__video"
-            autoplay
-            loop
-            muted
-            playsinline
-          />
-        </div>
-      )
-    }
+    <div class="feature__media">
+      {media && <Media media={media} />}
+    </div>
 
     <div class="feature__content">
       {
@@ -163,19 +141,6 @@ const {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
-  }
-
-  .feature__media {
-    position: relative;
-    width: 100%;
-  }
-
-  .feature__image,
-  .feature__video {
-    width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
-    object-fit: cover;
   }
 
   /* Responsive styles */

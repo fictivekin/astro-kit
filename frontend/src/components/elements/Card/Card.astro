@@ -1,6 +1,7 @@
 ---
 import { PortableText } from "astro-portabletext";
 import Heading from "@/components/elements/Heading/Heading.astro";
+import Media from "@/components/elements/Media/Media.astro";
 
 interface Props {
   card: {
@@ -95,32 +96,11 @@ const CardWrapper = card.makeClickable && cardHref ? "a" : "div";
   rel={card.makeClickable && cardTarget === "_blank" ? "noopener noreferrer" : undefined}
   class={`card ${card.makeClickable ? "card--clickable" : ""}`}
 >
-  {
-    card.media && card.media.type === "image" && card.media.image?.asset && (
-      <div class="card__media">
-        <img
-          src={card.media.image.asset.url}
-          alt={card.media.image.altText || ""}
-          class="card__image"
-        />
-      </div>
-    )
-  }
-
-  {
-    card.media && card.media.type === "video" && card.media.video?.asset && (
-      <div class="card__media">
-        <video
-          src={card.media.video.asset.url}
-          class="card__video"
-          autoplay
-          loop
-          muted
-          playsinline
-        />
-      </div>
-    )
-  }
+  {card.media && (
+    <div class="card__media">
+      <Media media={card.media} />
+    </div>
+  )}
 
   <div class="card__content">
       {card.eyebrow && <p class="card__eyebrow">{card.eyebrow}</p>}
@@ -179,13 +159,6 @@ const CardWrapper = card.makeClickable && cardHref ? "a" : "div";
     aspect-ratio: 16 / 9;
     overflow: hidden;
     background-color: #e0e0e0;
-  }
-
-  .card__image,
-  .card__video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
   }
 
   .card__content {

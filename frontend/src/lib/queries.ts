@@ -1,6 +1,47 @@
 import { sanityClient } from "./sanity";
 import { pageZ } from "./schemas";
 
+// Reusable GROQ fragments
+const media = `
+  media {
+    type,
+    image {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      altText
+    },
+    video {
+      asset->{
+        _id,
+        url
+      }
+    }
+  }
+`;
+
+const cta = `
+  cta[] {
+    variant,
+    size,
+    label,
+    linkType,
+    internalLink->{
+      _type,
+      slug
+    },
+    externalLink,
+    anchorLink
+  }
+`;
+
 const sectionFields = `
   _type == "ctaBanner" => {
     _type,
@@ -9,34 +50,8 @@ const sectionFields = `
     "body": coalesce(body, []),
     alignment,
     theme,
-    media {
-      type,
-      image {
-        asset->{
-          _id,
-          url
-        },
-        altText
-      },
-      video {
-        asset->{
-          _id,
-          url
-        }
-      }
-    },
-    cta[] {
-      variant,
-      size,
-      label,
-      linkType,
-      internalLink->{
-        _type,
-        slug
-      },
-      externalLink,
-      anchorLink
-    }
+    ${media},
+    ${cta}
   },
   _type == "feature" => {
     _type,
@@ -44,34 +59,8 @@ const sectionFields = `
     "body": coalesce(body, []),
     theme,
     mediaSide,
-    media {
-      type,
-      image {
-        asset->{
-          _id,
-          url
-        },
-        altText
-      },
-      video {
-        asset->{
-          _id,
-          url
-        }
-      }
-    },
-    cta[] {
-      variant,
-      size,
-      label,
-      linkType,
-      internalLink->{
-        _type,
-        slug
-      },
-      externalLink,
-      anchorLink
-    }
+    ${media},
+    ${cta}
   },
   _type == "headline" => {
     _type,
@@ -81,18 +70,7 @@ const sectionFields = `
     "subhead": coalesce(subhead, []),
     "body": coalesce(body, []),
     alignment,
-    cta[] {
-      variant,
-      size,
-      label,
-      linkType,
-      internalLink->{
-        _type,
-        slug
-      },
-      externalLink,
-      anchorLink
-    }
+    ${cta}
   },
   _type == "hero" => {
     _type,
@@ -101,34 +79,8 @@ const sectionFields = `
     "title": coalesce(title, []),
     "subhead": coalesce(subhead, []),
     "body": coalesce(body, []),
-    media {
-      type,
-      image {
-        asset->{
-          _id,
-          url
-        },
-        altText
-      },
-      video {
-        asset->{
-          _id,
-          url
-        }
-      }
-    },
-    cta[] {
-      variant,
-      size,
-      label,
-      linkType,
-      internalLink->{
-        _type,
-        slug
-      },
-      externalLink,
-      anchorLink
-    }
+    ${media},
+    ${cta}
   },
   _type == "multicard" => {
     _type,
@@ -139,35 +91,9 @@ const sectionFields = `
     "body": coalesce(body, []),
     layout,
     columns,
-    cta[] {
-      variant,
-      size,
-      label,
-      linkType,
-      internalLink->{
-        _type,
-        slug
-      },
-      externalLink,
-      anchorLink
-    },
+    ${cta},
     multicardItems[] {
-      media {
-        type,
-        image {
-          asset->{
-            _id,
-            url
-          },
-          altText
-        },
-        video {
-          asset->{
-            _id,
-            url
-          }
-        }
-      },
+      ${media},
       eyebrow,
       title,
       "subhead": coalesce(subhead, []),

@@ -2,6 +2,7 @@
 import { PortableText } from "astro-portabletext";
 import RichTextHeading from "@/components/elements/Heading/RichTextHeading.astro";
 import Button from "@/components/elements/Button/Button.astro";
+import Media from "@/components/elements/Media/Media.astro";
 
 const { hero } = Astro.props;
 
@@ -11,28 +12,9 @@ const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
 <section class={`hero hero--${theme}`}>
   <div class="hero__container">
     {
-      media && media.type === "image" && media.image?.asset && (
+      media && (
         <div class="hero__media">
-          <img
-            src={media.image.asset.url}
-            alt={media.image.altText || ""}
-            class="hero__image"
-          />
-        </div>
-      )
-    }
-
-    {
-      media && media.type === "video" && media.video?.asset && (
-        <div class="hero__media">
-          <video
-            src={media.video.asset.url}
-            class="hero__video"
-            autoplay
-            loop
-            muted
-            playsinline
-          />
+          <Media media={media} />
         </div>
       )
     }
@@ -124,13 +106,6 @@ const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
   .hero__media {
     width: 100%;
     max-width: 800px;
-  }
-
-  .hero__image,
-  .hero__video {
-    width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
   }
 
   .hero__content {

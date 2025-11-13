@@ -10,6 +10,12 @@ const nullToUndefined = <T extends z.ZodTypeAny>(schema: T) =>
 const assetZ = z.object({
   _id: z.string(),
   url: z.string(),
+  metadata: nullToUndefined(z.object({
+    dimensions: nullToUndefined(z.object({
+      width: z.number(),
+      height: z.number(),
+    })),
+  })),
 });
 
 // Slug object

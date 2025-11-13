@@ -1,0 +1,54 @@
+---
+import { Picture } from "astro:assets";
+
+const { media } = Astro.props;
+---
+
+{
+  media && media.type === "image" && media.image?.asset && (
+    <div class="media">
+      <Picture
+        src={media.image.asset.url}
+        alt={media.image.altText || ""}
+        formats={["avif", "webp"]}
+        widths={[400, 800, 1200]}
+        sizes="(max-width: 768px) 100vw, (max-width: 968px) 100vw, 50vw"
+        width={media.image.asset.metadata?.dimensions?.width}
+        height={media.image.asset.metadata?.dimensions?.height}
+        class="media__image"
+        loading="lazy"
+      />
+    </div>
+  )
+}
+
+{
+  media && media.type === "video" && media.video?.asset && (
+    <div class="media">
+      <video
+        src={media.video.asset.url}
+        class="media__video"
+        autoplay
+        loop
+        muted
+        playsinline
+      />
+    </div>
+  )
+}
+
+<style>
+  .media {
+    position: relative;
+    width: 100%;
+  }
+
+  .media__image,
+  .media__video {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    object-fit: cover;
+  }
+</style>
+

@@ -1,0 +1,31 @@
+---
+import { componentMap } from "@/lib/componentMap";
+
+interface Props {
+  sections?: any[];
+}
+
+const { sections = [] } = Astro.props;
+---
+
+{
+  sections.map((section: any, index: number) => {
+    const Component = componentMap[section._type];
+
+    const lazyLoad = index > 2;
+    const semanticLevel = index > 0 ? "h2" : "h1";
+
+    if (Component) {
+      return (
+        <Component
+          {...{ [section._type]: section }}
+          lazyLoad={lazyLoad}
+          semanticLevel={semanticLevel}
+        />
+      );
+    }
+
+    // Fallback for sections without a component
+    return <div>No component for: {section._type}</div>;
+  })
+}

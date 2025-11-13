@@ -2,6 +2,7 @@
 import { PortableText } from "astro-portabletext";
 import Heading from "@/components/elements/Heading/Heading.astro";
 import Button from "@/components/elements/Button/Button.astro";
+import Media from "@/components/elements/Media/Media.astro";
 
 const { ctaBanner } = Astro.props;
 
@@ -21,28 +22,9 @@ const {
 >
   <div class="cta-banner__container">
     {
-      media && media.type === "image" && media.image?.asset && (
+      media && (
         <div class="cta-banner__media">
-          <img
-            src={media.image.asset.url}
-            alt={media.image.altText || ""}
-            class="cta-banner__image"
-          />
-        </div>
-      )
-    }
-
-    {
-      media && media.type === "video" && media.video?.asset && (
-        <div class="cta-banner__media">
-          <video
-            src={media.video.asset.url}
-            class="cta-banner__video"
-            autoplay
-            loop
-            muted
-            playsinline
-          />
+          <Media media={media} />
         </div>
       )
     }
@@ -186,13 +168,6 @@ const {
 
   .cta-banner__media {
     margin-bottom: 2rem;
-  }
-
-  .cta-banner__image,
-  .cta-banner__video {
-    width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
   }
 
   /* Responsive styles */
