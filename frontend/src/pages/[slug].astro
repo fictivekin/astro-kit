@@ -1,25 +1,20 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { sanityClient } from "../lib/sanity";
 import { componentMap } from "../lib/componentMap";
-import { fetchPageBySlug } from "../lib/queries";
+import { getCollection, getEntry } from "astro:content";
 
 // Get all pages for static generation
 export async function getStaticPaths() {
-  const pages = await sanityClient.fetch(
-    `*[_type == "page" && defined(slug.current)] {
-      "slug": slug.current
-    }`
-  );
+  const pages = await getCollection("pages");
 
   return pages.map((page: any) => ({
-    params: { slug: page.slug },
+    params: { slug: page.id },
   }));
 }
 
 const { slug } = Astro.params;
 
-const page = await fetchPageBySlug(slug);
+const page = await getEntry("pages", slug);
 
 // Return 404 if page not found
 if (!page) {
@@ -29,7 +24,7 @@ if (!page) {
 
 <Layout>
   {
-    page?.sections?.map((section: any) => {
+    page?.data?.sections?.map((section: any) => {
       const Component = componentMap[section._type];
 
       if (Component) {

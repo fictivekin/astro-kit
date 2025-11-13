@@ -1,14 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { componentMap } from "../lib/componentMap";
-import { fetchHomepage } from "../lib/queries";
+import { getEntry } from "astro:content";
 
-const homepage = await fetchHomepage();
+const homepage = await getEntry("home", "homepage");
 ---
 
 <Layout>
   {
-    homepage?.sections?.map((section: any) => {
+    homepage?.data?.sections?.map((section: any) => {
       const Component = componentMap[section._type];
 
       if (Component) {

@@ -1,4 +1,5 @@
 import { sanityClient } from "./sanity";
+import { pageZ } from "./schemas";
 
 const sectionFields = `
   _type == "ctaBanner" => {
@@ -208,9 +209,11 @@ const sectionProjections = `
 `;
 
 export async function fetchHomepage() {
-  return await sanityClient.fetch(
+  const result = await sanityClient.fetch(
     `*[_type == "page" && _id == "homepage"][0] {
-      ...,
+      _id,
+      _type,
+      title,
       "slug": select(
         _id == "homepage" => "homepage",
         _id == "notFoundPage" => "404",
@@ -222,12 +225,16 @@ export async function fetchHomepage() {
       noIndex
     }`
   );
+
+  return pageZ.parse(result);
 }
 
 export async function fetchPageBySlug(slug: string) {
-  return await sanityClient.fetch(
+  const result = await sanityClient.fetch(
     `*[_type == "page" && slug.current == $slug][0] {
-      ...,
+      _id,
+      _type,
+      title,
       "slug": select(
         _id == "homepage" => "homepage",
         _id == "notFoundPage" => "404",
@@ -240,5 +247,7 @@ export async function fetchPageBySlug(slug: string) {
     }`,
     { slug }
   );
+
+  return pageZ.parse(result);
 }
 
