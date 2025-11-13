@@ -123,18 +123,18 @@ const CardWrapper = card.makeClickable && cardHref ? "a" : "div";
   }
 
   <div class="card__content">
-    {card.eyebrow && <p class="card__eyebrow">{card.eyebrow}</p>}
+      {card.eyebrow && <p class="card__eyebrow">{card.eyebrow}</p>}
+
+      {
+        card.title?.length && (
+          <div class="card__title">
+            <Heading text={card.title} semanticLevel="h3" />
+          </div>
+        )
+      }
 
     {
-      card.title && (
-        <div class="card__title">
-          <Heading text={card.title} semanticLevel="h3" />
-        </div>
-      )
-    }
-
-    {
-      card.subhead && (
+      card.subhead?.length > 0 && (
         <div class="card__subhead">
           <PortableText value={card.subhead} />
         </div>
@@ -142,7 +142,7 @@ const CardWrapper = card.makeClickable && cardHref ? "a" : "div";
     }
 
     {
-      card.body && (
+      card.body?.length > 0 && (
         <div class="card__body">
           <PortableText value={card.body} />
         </div>

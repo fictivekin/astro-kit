@@ -1,6 +1,6 @@
 ---
 import { PortableText } from "astro-portabletext";
-import Heading from "@/components/elements/Heading/Heading.astro";
+import RichTextHeading from "@/components/elements/Heading/RichTextHeading.astro";
 import Button from "@/components/elements/Button/Button.astro";
 
 const { hero } = Astro.props;
@@ -41,15 +41,15 @@ const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
       {eyebrow && <p class="hero__eyebrow">{eyebrow}</p>}
 
       {
-        title && (
+        title?.length > 0 && (
           <div class="hero__title">
-            <Heading text={title} semanticLevel="h1" />
+            <RichTextHeading text={title} semanticLevel="h1" />
           </div>
         )
       }
 
       {
-        subhead && (
+        subhead?.length > 0 && (
           <div class="hero__subhead">
             <PortableText value={subhead} />
           </div>
@@ -57,7 +57,7 @@ const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
       }
 
       {
-        body && (
+        body?.length > 0 && (
           <div class="hero__body">
             <PortableText value={body} />
           </div>

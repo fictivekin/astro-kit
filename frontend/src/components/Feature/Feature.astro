@@ -46,7 +46,7 @@ const {
 
     <div class="feature__content">
       {
-        title && (
+        title?.length && (
           <div class="feature__title">
             <Heading text={title} semanticLevel="h2" />
           </div>
@@ -54,7 +54,7 @@ const {
       }
 
       {
-        body && (
+        body?.length > 0 && (
           <div class="feature__body">
             <PortableText value={body} />
           </div>

@@ -26,19 +26,19 @@ const {
         <div class="multicard__header">
           {eyebrow && <p class="multicard__eyebrow">{eyebrow}</p>}
 
-          {title && (
+          {title?.length && (
             <div class="multicard__title">
               <Heading text={title} semanticLevel="h2" />
             </div>
           )}
 
-          {subhead && (
+          {subhead?.length > 0 && (
             <div class="multicard__subhead">
               <PortableText value={subhead} />
             </div>
           )}
 
-          {body && (
+          {body?.length > 0 && (
             <div class="multicard__body">
               <PortableText value={body} />
             </div>

@@ -51,7 +51,7 @@ const {
       {eyebrow && <p class="cta-banner__eyebrow">{eyebrow}</p>}
 
       {
-        title && (
+        title?.length && (
           <div class="cta-banner__title">
             <Heading text={title} semanticLevel="h2" />
           </div>
@@ -59,7 +59,7 @@ const {
       }
 
       {
-        body && (
+        body?.length > 0 && (
           <div class="cta-banner__body">
             <PortableText value={body} />
           </div>

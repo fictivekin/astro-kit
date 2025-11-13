@@ -5,7 +5,7 @@ const sectionFields = `
     _type,
     eyebrow,
     title,
-    body,
+    "body": coalesce(body, []),
     alignment,
     theme,
     media {
@@ -40,7 +40,7 @@ const sectionFields = `
   _type == "feature" => {
     _type,
     title,
-    body,
+    "body": coalesce(body, []),
     theme,
     mediaSide,
     media {
@@ -76,9 +76,9 @@ const sectionFields = `
     _type,
     theme,
     eyebrow,
-    title,
-    subhead,
-    body,
+    "title": coalesce(title, []),
+    "subhead": coalesce(subhead, []),
+    "body": coalesce(body, []),
     alignment,
     cta[] {
       variant,
@@ -97,9 +97,9 @@ const sectionFields = `
     _type,
     theme,
     eyebrow,
-    title,
-    subhead,
-    body,
+    "title": coalesce(title, []),
+    "subhead": coalesce(subhead, []),
+    "body": coalesce(body, []),
     media {
       type,
       image {
@@ -134,8 +134,8 @@ const sectionFields = `
     theme,
     eyebrow,
     title,
-    subhead,
-    body,
+    "subhead": coalesce(subhead, []),
+    "body": coalesce(body, []),
     layout,
     columns,
     cta[] {
@@ -169,8 +169,8 @@ const sectionFields = `
       },
       eyebrow,
       title,
-      subhead,
-      body,
+      "subhead": coalesce(subhead, []),
+      "body": coalesce(body, []),
       makeClickable,
       link {
         label,

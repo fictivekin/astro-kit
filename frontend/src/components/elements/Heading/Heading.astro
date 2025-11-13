@@ -1,26 +1,19 @@
 ---
-import { PortableText } from "astro-portabletext";
-import StripPTag from "./StripPTag.astro";
-
 interface Props {
-  text: any;
+  text: string;
   semanticLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
 const { text, semanticLevel = "h2" } = Astro.props;
 
-// Custom component to render normal blocks as fragments instead of <p> tags
-const customComponents = {
-  block: {
-    normal: StripPTag,
-  },
-};
-
 const Tag = semanticLevel;
 ---
 
 {
-  /* no newline to avoid white space in heading tag */
   /* prettier-ignore */
-  text && (<Tag><PortableText value={text} components={customComponents} /></Tag>)
+  text && <Tag>{text}</Tag>
 }
+
+<style>
+  /* Add any default heading styles here if needed */
+</style>
