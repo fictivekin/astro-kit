@@ -1,8 +1,8 @@
 ---
 import { PortableText } from "astro-portabletext";
 import Heading from "@/components/elements/Heading/Heading.astro";
-import Button from "@/components/elements/Button/Button.astro";
 import Media from "@/components/elements/Media/Media.astro";
+import Cta from "@/components/elements/Cta/Cta.astro";
 
 const { ctaBanner, lazyLoad = true, semanticLevel = "h2" } = Astro.props;
 
@@ -51,17 +51,7 @@ const {
       {
         cta && cta.length > 0 && (
           <div class="cta-banner__cta">
-            {cta.map((button: any) => (
-              <Button
-                label={button.label}
-                variant={button.variant}
-                size={button.size}
-                linkType={button.linkType}
-                internalLink={button.internalLink}
-                externalLink={button.externalLink}
-                anchorLink={button.anchorLink}
-              />
-            ))}
+            <Cta cta={cta} />
           </div>
         )
       }

@@ -1,0 +1,28 @@
+---
+import Button from "@/components/elements/Button/Button.astro";
+
+interface Props {
+  cta?: any[];
+}
+
+const { cta = [] } = Astro.props;
+---
+
+{
+  cta && cta.length > 0 && (
+    <>
+      {cta.map((button: any) => (
+        <Button
+          label={button.label}
+          variant={button.variant}
+          size={button.size}
+          linkType={button.linkType}
+          internalLink={button.internalLink}
+          externalLink={button.externalLink}
+          anchorLink={button.anchorLink}
+        />
+      ))}
+    </>
+  )
+}
+

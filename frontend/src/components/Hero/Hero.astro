@@ -1,8 +1,8 @@
 ---
 import { PortableText } from "astro-portabletext";
 import RichTextHeading from "@/components/elements/Heading/RichTextHeading.astro";
-import Button from "@/components/elements/Button/Button.astro";
 import Media from "@/components/elements/Media/Media.astro";
+import Cta from "@/components/elements/Cta/Cta.astro";
 
 const { hero, lazyLoad = true, semanticLevel = "h1" } = Astro.props;
 
@@ -49,17 +49,7 @@ const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
       {
         cta && cta.length > 0 && (
           <div class="hero__cta">
-            {cta.map((button: any) => (
-              <Button
-                label={button.label}
-                variant={button.variant}
-                size={button.size}
-                linkType={button.linkType}
-                internalLink={button.internalLink}
-                externalLink={button.externalLink}
-                anchorLink={button.anchorLink}
-              />
-            ))}
+            <Cta cta={cta} />
           </div>
         )
       }
