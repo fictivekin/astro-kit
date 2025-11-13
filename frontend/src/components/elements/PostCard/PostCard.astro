@@ -1,0 +1,161 @@
+---
+import Media from "@/components/elements/Media/Media.astro";
+import type { Post } from "@/lib/schemas/post";
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+
+// Format the publish date
+const formattedDate = post.publishedOn
+  ? new Date(post.publishedOn).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  : "";
+
+// Get first author name if available
+const authorName = post.author?.[0]?.name;
+
+// Get first topic if available
+const primaryTopic = post.topics?.[0];
+---
+
+<article class="post-card">
+  <a href={`/resources/${post.slug}`} class="post-card__link">
+    {
+      post.heroImage && (
+        <div class="post-card__media">
+          <Media media={{ type: "image", image: post.heroImage }} />
+        </div>
+      )
+    }
+
+    <div class="post-card__content">
+      {primaryTopic && (
+        <span class="post-card__topic">{primaryTopic.title}</span>
+      )}
+
+      <h3 class="post-card__title">{post.title}</h3>
+
+      {post.thumbnailText && (
+        <p class="post-card__excerpt">{post.thumbnailText}</p>
+      )}
+
+      <div class="post-card__meta">
+        {formattedDate && (
+          <time class="post-card__date" datetime={post.publishedOn}>
+            {formattedDate}
+          </time>
+        )}
+        {authorName && <span class="post-card__author">By {authorName}</span>}
+      </div>
+    </div>
+  </a>
+</article>
+
+<style>
+  .post-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .post-card__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .post-card__media {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #f0f0f0;
+  }
+
+  .post-card__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .post-card__content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .post-card__topic {
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6366f1;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .post-card__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #1f2937;
+  }
+
+  .post-card__excerpt {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #6b7280;
+    flex: 1;
+  }
+
+  .post-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #9ca3af;
+    margin-top: auto;
+  }
+
+  .post-card__date {
+    font-weight: 500;
+  }
+
+  .post-card__author {
+    font-style: italic;
+  }
+
+  .post-card__meta::before {
+    content: "";
+    display: block;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .post-card__title {
+      font-size: 1.75rem;
+    }
+  }
+</style>
+

@@ -1,0 +1,188 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PostCard from "@/components/elements/PostCard/PostCard.astro";
+import { getCollection } from "astro:content";
+import { sanityClient } from "@/lib/sanity";
+
+const posts = await getCollection("posts");
+
+// Get all topics for filter navigation
+const topics = await sanityClient.fetch<
+  Array<{ slug: { current: string }; title: string }>
+>(
+  `*[_type == "topic"] | order(title asc) {
+    slug,
+    title
+  }`
+);
+---
+
+<Layout>
+  <div class="resources-page">
+    <div class="resources-page__container">
+      <header class="resources-page__header">
+        <h1 class="resources-page__title">Resources</h1>
+        <p class="resources-page__subtitle">
+          Explore our latest articles, guides, and insights
+        </p>
+      </header>
+
+      {
+        topics && topics.length > 0 && (
+          <nav class="resources-page__topics">
+            <h2 class="resources-page__topics-title">Filter by topic:</h2>
+            <div class="resources-page__topics-list">
+              <a href="/resources" class="resources-page__topic-link active">
+                All
+              </a>
+              {topics.map((topic) => (
+                <a
+                  href={`/resources/topic/${topic.slug.current}`}
+                  class="resources-page__topic-link"
+                >
+                  {topic.title}
+                </a>
+              ))}
+            </div>
+          </nav>
+        )
+      }
+
+      {
+        posts && posts.length > 0 ? (
+          <div class="resources-page__grid">
+            {posts.map((post) => (
+              <PostCard post={post.data} />
+            ))}
+          </div>
+        ) : (
+          <div class="resources-page__empty">
+            <p>No posts available yet. Check back soon!</p>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .resources-page {
+    width: 100%;
+    min-height: 100vh;
+    background: #f9fafb;
+  }
+
+  .resources-page__container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+  }
+
+  .resources-page__header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .resources-page__title {
+    margin: 0 0 1rem;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1f2937;
+  }
+
+  .resources-page__subtitle {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #6b7280;
+    line-height: 1.6;
+  }
+
+  .resources-page__topics {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .resources-page__topics-title {
+    margin: 0 0 1.5rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  .resources-page__topics-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .resources-page__topic-link {
+    display: inline-block;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-decoration: none;
+    background: #f3f4f6;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .resources-page__topic-link:hover {
+    background: #e5e7eb;
+    color: #374151;
+  }
+
+  .resources-page__topic-link.active {
+    background: #6366f1;
+    color: #fff;
+  }
+
+  .resources-page__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .resources-page__empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .resources-page__empty p {
+    margin: 0;
+    font-size: 1.125rem;
+    color: #6b7280;
+  }
+
+  @media (min-width: 640px) {
+    .resources-page__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .resources-page__container {
+      padding: 5rem 2rem;
+    }
+
+    .resources-page__title {
+      font-size: 4rem;
+    }
+
+    .resources-page__subtitle {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .resources-page__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

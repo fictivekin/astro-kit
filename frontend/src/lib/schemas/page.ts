@@ -7,7 +7,7 @@ const nullToUndefined = <T extends z.ZodTypeAny>(schema: T) =>
 // Base schemas for common structures
 
 // Asset reference from Sanity
-const assetZ = z.object({
+export const assetZ = z.object({
   _id: z.string(),
   url: z.string(),
   metadata: nullToUndefined(z.object({
@@ -19,18 +19,18 @@ const assetZ = z.object({
 });
 
 // Slug object
-const slugZ = z.object({
+export const slugZ = z.object({
   current: z.string(),
 });
 
 // Internal link reference (used in CTAs and multicard links)
-const internalLinkZ = z.object({
+export const internalLinkZ = z.object({
   _type: z.string(),
   slug: nullToUndefined(slugZ),
 });
 
 // Portable Text - flexible array with passthrough for block content
-const portableTextZ = z.array(
+export const portableTextZ = z.array(
   z.object({
     _type: z.string(),
     _key: z.string(),
@@ -39,16 +39,16 @@ const portableTextZ = z.array(
 
 // Media schemas
 
-const imageAssetZ = z.object({
+export const imageAssetZ = z.object({
   asset: assetZ,
   altText: nullToUndefined(z.string()),
 });
 
-const videoAssetZ = z.object({
+export const videoAssetZ = z.object({
   asset: assetZ,
 });
 
-const mediaZ = nullToUndefined(z.object({
+export const mediaZ = nullToUndefined(z.object({
   type: nullToUndefined(z.string()),
   image: nullToUndefined(imageAssetZ),
   video: nullToUndefined(videoAssetZ),
@@ -56,7 +56,7 @@ const mediaZ = nullToUndefined(z.object({
 
 // CTA schema (used across multiple section types)
 
-const ctaZ = z.object({
+export const ctaZ = z.object({
   variant: nullToUndefined(z.string()),
   size: nullToUndefined(z.string()),
   label: nullToUndefined(z.string()),
@@ -164,7 +164,7 @@ const sectionZ = z.discriminatedUnion('_type', [
 ]);
 
 // Page schema - top-level page object matching GROQ query structure
-const pageZ = z.object({
+export const pageZ = z.object({
   _id: z.string(),
   _type: z.string(),
   title: nullToUndefined(z.string()),
@@ -188,14 +188,6 @@ export type Cta = z.infer<typeof ctaZ>;
 export type PortableText = z.infer<typeof portableTextZ>;
 
 export {
-  assetZ,
-  slugZ,
-  internalLinkZ,
-  portableTextZ,
-  imageAssetZ,
-  videoAssetZ,
-  mediaZ,
-  ctaZ,
   ctaBannerZ,
   featureZ,
   headlineZ,
@@ -204,6 +196,5 @@ export {
   multicardItemZ,
   multicardLinkZ,
   sectionZ,
-  pageZ,
 };
 

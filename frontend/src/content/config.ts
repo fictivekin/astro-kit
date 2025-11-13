@@ -1,7 +1,9 @@
 import { defineCollection } from 'astro:content';
-import { fetchHomepage, fetchPageBySlug } from '../lib/queries';
+import { fetchHomepage, fetchPageBySlug } from '../lib/queries/page';
+import { fetchAllPosts } from '../lib/queries/post';
 import { sanityClient } from '../lib/sanity';
-import { pageZ } from '../lib/schemas';
+import { pageZ } from '../lib/schemas/page';
+import { postZ } from '../lib/schemas/post';
 
 // Home collection - single entry for homepage
 const homeCollection = defineCollection({
@@ -50,8 +52,26 @@ const pagesCollection = defineCollection({
   schema: pageZ,
 });
 
+// Posts collection - all posts
+const postsCollection = defineCollection({
+  loader: async () => {
+    const posts = await fetchAllPosts();
+
+    if (!posts || posts.length === 0) {
+      return [];
+    }
+
+    return posts.map(post => ({
+      id: post.slug,
+      ...post,
+    }));
+  },
+  schema: postZ,
+});
+
 export const collections = {
   home: homeCollection,
   pages: pagesCollection,
+  posts: postsCollection,
 };
 

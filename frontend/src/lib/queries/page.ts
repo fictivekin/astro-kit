@@ -1,5 +1,5 @@
-import { sanityClient } from "./sanity";
-import { pageZ } from "./schemas";
+import { sanityClient } from "../sanity";
+import { pageZ } from "../schemas/page";
 
 // Reusable GROQ fragments
 const media = `
