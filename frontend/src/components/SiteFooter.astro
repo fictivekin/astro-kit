@@ -1,0 +1,113 @@
+---
+import { getCollection } from "astro:content";
+import ResolvedLink from "../components/elements/ResolvedLink.astro";
+import type {
+  NavigationItem,
+  NavigationColumn,
+  SocialPlatform,
+} from "../lib/schemas/navigation";
+
+// Fetch footer navigation from content collection
+const footerNavigationEntries = await getCollection("footerNavigation");
+const footerNavigation = footerNavigationEntries[0]?.data;
+
+const brandingText = footerNavigation?.brandingText;
+const navigationColumns = footerNavigation?.navigationColumns || [];
+const platforms = footerNavigation?.platforms || [];
+const legalNavigation = footerNavigation?.legalNavigation || [];
+const copyrightText = footerNavigation?.copyrightText || "All rights reserved.";
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer>
+  <div class="footer__container">
+    {
+      brandingText && (
+        <div class="footer__branding">
+          <p>{brandingText}</p>
+        </div>
+      )
+    }
+
+    {
+      navigationColumns.length > 0 && (
+        <div class="footer__navigation">
+          {navigationColumns.map((column: NavigationColumn) => (
+            <div class="footer__column">
+              {column.title && (
+                <h3 class="footer__column-title">{column.title}</h3>
+              )}
+              {column.items && column.items.length > 0 && (
+                <ul class="footer__nav-list">
+                  {column.items.map((item: NavigationItem) => (
+                    <li>
+                      <ResolvedLink link={item.link} />
+                      {item.linkText && (
+                        <span class="footer__link-text">{item.linkText}</span>
+                      )}
+                      {item.children && item.children.length > 0 && (
+                        <ul class="footer__nav-list--nested">
+                          {item.children.map((child: NavigationItem) => (
+                            <li>
+                              <ResolvedLink link={child.link} />
+                              {child.linkText && (
+                                <span class="footer__link-text">
+                                  {child.linkText}
+                                </span>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      platforms.length > 0 && (
+        <div class="footer__social">
+          <ul class="footer__social-list">
+            {platforms.map((platform: SocialPlatform) => (
+              <li>
+                <a
+                  href={platform.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {platform.platform}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+
+    <div class="footer__bottom">
+      {
+        legalNavigation.length > 0 && (
+          <nav class="footer__legal">
+            <ul class="footer__legal-list">
+              {legalNavigation.map((item: NavigationItem) => (
+                <li>
+                  <ResolvedLink link={item.link} />
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+
+      <p class="footer__copyright">
+        © {currentYear} Fictive Kin. {copyrightText}
+      </p>
+    </div>
+  </div>
+</footer>

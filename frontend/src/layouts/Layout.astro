@@ -1,5 +1,7 @@
 ---
 import { ClientRouter, fade } from "astro:transitions";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
 ---
 
 <!doctype html>
@@ -13,17 +15,11 @@ import { ClientRouter, fade } from "astro:transitions";
     <ClientRouter />
   </head>
   <body>
-    <header>
-      <div class="header__container">
-        <a href="/">HOME.</a>
-        <a href="/about">About</a>
-        <a href="/contact">Contact</a>
-        <a href="/resources">Resources</a>
-      </div>
-    </header>
+    <SiteHeader />
     <main transition:animate={fade({ duration: "0.5s" })}>
       <slot />
     </main>
+    <SiteFooter />
   </body>
 </html>
 

@@ -1,9 +1,11 @@
 import { defineCollection } from 'astro:content';
 import { fetchHomepage, fetchPageBySlug } from '../lib/queries/page';
 import { fetchAllPosts, fetchPostsByTopic } from '../lib/queries/post';
+import { fetchMainNavigation, fetchFooterNavigation } from '../lib/queries/navigation';
 import { sanityClient } from '../lib/sanity';
 import { pageZ } from '../lib/schemas/page';
 import { postZ } from '../lib/schemas/post';
+import { mainNavigationZ, footerNavigationZ } from '../lib/schemas/navigation';
 
 // Home collection - single entry for homepage
 const homeCollection = defineCollection({
@@ -100,10 +102,46 @@ for (const topic of topics) {
   });
 }
 
+// Main navigation collection - singleton
+const mainNavigationCollection = defineCollection({
+  loader: async () => {
+    const mainNavigation = await fetchMainNavigation();
+
+    if (!mainNavigation) {
+      return [];
+    }
+
+    return [{
+      id: 'mainNavigation',
+      ...mainNavigation,
+    }];
+  },
+  schema: mainNavigationZ,
+});
+
+// Footer navigation collection - singleton
+const footerNavigationCollection = defineCollection({
+  loader: async () => {
+    const footerNavigation = await fetchFooterNavigation();
+
+    if (!footerNavigation) {
+      return [];
+    }
+
+    return [{
+      id: 'footerNavigation',
+      ...footerNavigation,
+    }];
+  },
+  schema: footerNavigationZ,
+});
+
 export const collections = {
   home: homeCollection,
   pages: pagesCollection,
   posts: postsCollection,
+  mainNavigation: mainNavigationCollection,
+  footerNavigation: footerNavigationCollection,
   ...topicCollections,
 };
 

@@ -1,0 +1,16 @@
+---
+import { getCollection } from "astro:content";
+import ResolvedLink from "../components/elements/ResolvedLink.astro";
+import type { NavigationItem } from "../lib/schemas/navigation";
+
+// Fetch main navigation from content collection
+const mainNavigationEntries = await getCollection("mainNavigation");
+const mainNavigation = mainNavigationEntries[0]?.data;
+const navItems = mainNavigation?.items || [];
+---
+
+<header>
+  <nav class="header__container">
+    {navItems.map((item: NavigationItem) => <ResolvedLink link={item.link} />)}
+  </nav>
+</header>

@@ -1,0 +1,21 @@
+---
+import { resolveLink } from "../../lib/linkResolver";
+import type { Link } from "../../lib/schemas/navigation";
+
+interface Props {
+  link: Link | undefined;
+  class?: string;
+}
+
+const { link, class: className } = Astro.props;
+
+const href = resolveLink(link);
+const target = link?.openInNewTab ? "_blank" : undefined;
+const rel = link?.openInNewTab ? "noopener noreferrer" : undefined;
+const label = link?.label || href;
+---
+
+<a href={href} target={target} rel={rel} class={className}>
+  <slot>{label}</slot>
+</a>
+
