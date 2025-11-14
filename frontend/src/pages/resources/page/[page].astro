@@ -1,25 +1,36 @@
 ---
-import Layout from "../../layouts/Layout.astro";
+import Layout from "../../../layouts/Layout.astro";
 import PostCard from "@/components/elements/PostCard/PostCard.astro";
 import Pagination from "@/components/elements/Pagination/Pagination.astro";
 import { getCollection } from "astro:content";
 import { sanityClient } from "@/lib/sanity";
 import { POSTS_PER_PAGE } from "@/lib/constants";
 
-const currentPage = 1;
+export async function getStaticPaths() {
+  const allPosts = await getCollection("posts");
+  const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+
+  // Generate paths for pages 2 and onwards (page 1 is at /resources)
+  return Array.from({ length: totalPages - 1 }, (_, i) => ({
+    params: { page: String(i + 2) },
+  }));
+}
+
+const { page } = Astro.params;
+const currentPage = parseInt(page);
 
 const allPosts = await getCollection("posts");
 const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
 
-// Get posts for current page (first 5)
-const posts = allPosts.slice(0, POSTS_PER_PAGE);
+// Validate page number
+if (currentPage < 1 || currentPage > totalPages) {
+  return Astro.redirect("/404");
+}
 
-console.log(
-  "Resources index - Total posts:",
-  allPosts.length,
-  "Total pages:",
-  totalPages
-);
+// Get posts for current page
+const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+const endIndex = startIndex + POSTS_PER_PAGE;
+const posts = allPosts.slice(startIndex, endIndex);
 
 // Get all topics for filter navigation
 const topics = await sanityClient.fetch<
@@ -71,17 +82,15 @@ const topics = await sanityClient.fetch<
                 <PostCard post={post.data} />
               ))}
             </div>
-            {totalPages > 1 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                baseUrl="/resources"
-              />
-            )}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              baseUrl="/resources"
+            />
           </>
         ) : (
           <div class="resources-page__empty">
-            <p>No posts available yet. Check back soon!</p>
+            <p>No posts available on this page.</p>
           </div>
         )
       }
@@ -210,3 +219,4 @@ const topics = await sanityClient.fetch<
     }
   }
 </style>
+

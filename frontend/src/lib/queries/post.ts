@@ -163,11 +163,16 @@ export async function fetchAllPosts() {
     }`
   );
 
+  console.log('fetchAllPosts - Raw results from Sanity:', results?.length);
+
   if (!results || results.length === 0) {
     return [];
   }
 
-  return results.map(result => postZ.parse(result));
+  const parsed = results.map(result => postZ.parse(result));
+  console.log('fetchAllPosts - Parsed results:', parsed.length);
+
+  return parsed;
 }
 
 // Fetch posts filtered by topic

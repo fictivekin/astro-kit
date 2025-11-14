@@ -1,14 +1,12 @@
 ---
-import Layout from "../../../layouts/Layout.astro";
+import Layout from "../../../../../layouts/Layout.astro";
 import PostCard from "@/components/elements/PostCard/PostCard.astro";
 import Pagination from "@/components/elements/Pagination/Pagination.astro";
 import { sanityClient } from "@/lib/sanity";
 import { getCollection } from "astro:content";
 import { POSTS_PER_PAGE } from "@/lib/constants";
 
-const currentPage = 1;
-
-// Get all topics for static generation
+// Get all topics and generate paths for all pages
 export async function getStaticPaths() {
   const topics = await sanityClient.fetch<
     Array<{ slug: { current: string }; title: string }>
@@ -19,24 +17,45 @@ export async function getStaticPaths() {
     }`
   );
 
-  return topics.map((topic) => ({
-    params: { topic: topic.slug.current },
-    props: { topicTitle: topic.title },
-  }));
+  const paths = [];
+
+  for (const topic of topics) {
+    const posts = await getCollection(`posts-${topic.slug.current}` as any);
+    const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+
+    // Generate paths for pages 2 and onwards (page 1 is at /resources/topic/{topic})
+    for (let i = 2; i <= totalPages; i++) {
+      paths.push({
+        params: {
+          topic: topic.slug.current,
+          page: String(i),
+        },
+        props: {
+          topicTitle: topic.title,
+        },
+      });
+    }
+  }
+
+  return paths;
 }
 
-const { topic } = Astro.params;
+const { topic, page } = Astro.params;
 const { topicTitle } = Astro.props;
+const currentPage = parseInt(page);
 
 const allPosts = await getCollection(`posts-${topic}` as any);
+const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
 
-// Return 404 if topic not found or has no posts
-if (!allPosts || allPosts.length === 0) {
+// Validate page number
+if (currentPage < 1 || currentPage > totalPages) {
   return Astro.redirect("/404");
 }
 
-const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
-const posts = allPosts.slice(0, POSTS_PER_PAGE);
+// Get posts for current page
+const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+const endIndex = startIndex + POSTS_PER_PAGE;
+const posts = allPosts.slice(startIndex, endIndex);
 ---
 
 <Layout>
@@ -50,17 +69,25 @@ const posts = allPosts.slice(0, POSTS_PER_PAGE);
         </p>
       </header>
 
-      <div class="topic-page__grid">
-        {posts.map((post: any) => <PostCard post={post.data} />)}
-      </div>
-
       {
-        totalPages > 1 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            baseUrl={`/resources/topic/${topic}`}
-          />
+        posts && posts.length > 0 ? (
+          <>
+            <div class="topic-page__grid">
+              {posts.map((post: any) => (
+                <PostCard post={post.data} />
+              ))}
+            </div>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              baseUrl={`/resources/topic/${topic}`}
+            />
+          </>
+        ) : (
+          <div class="topic-page__empty">
+            <p>No posts available on this page.</p>
+          </div>
         )
       }
 
@@ -108,7 +135,22 @@ const posts = allPosts.slice(0, POSTS_PER_PAGE);
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
+  }
+
+  .topic-page__empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+  }
+
+  .topic-page__empty p {
+    margin: 0;
+    font-size: 1.125rem;
+    color: #6b7280;
   }
 
   .topic-page__back {

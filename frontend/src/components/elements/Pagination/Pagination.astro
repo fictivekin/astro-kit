@@ -1,0 +1,220 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props;
+
+// Generate page numbers to display
+const getPageNumbers = () => {
+  const pages: (number | string)[] = [];
+  const maxVisible = 7;
+
+  if (totalPages <= maxVisible) {
+    // Show all pages if total is small
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+  } else {
+    // Always show first page
+    pages.push(1);
+
+    if (currentPage <= 3) {
+      // Near the beginning
+      for (let i = 2; i <= 5; i++) {
+        pages.push(i);
+      }
+      pages.push("...");
+      pages.push(totalPages);
+    } else if (currentPage >= totalPages - 2) {
+      // Near the end
+      pages.push("...");
+      for (let i = totalPages - 4; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // In the middle
+      pages.push("...");
+      for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+        pages.push(i);
+      }
+      pages.push("...");
+      pages.push(totalPages);
+    }
+  }
+
+  return pages;
+};
+
+const pageNumbers = getPageNumbers();
+
+const getPageUrl = (page: number) => {
+  if (page === 1) {
+    return baseUrl;
+  }
+  return `${baseUrl}/page/${page}`;
+};
+---
+
+<nav class="pagination" aria-label="Pagination">
+  <div class="pagination__container">
+    {
+      currentPage > 1 ? (
+        <a
+          href={getPageUrl(currentPage - 1)}
+          class="pagination__button pagination__button--prev"
+          aria-label="Previous page"
+        >
+          ← Previous
+        </a>
+      ) : (
+        <span class="pagination__button pagination__button--prev pagination__button--disabled">
+          ← Previous
+        </span>
+      )
+    }
+
+    <div class="pagination__pages">
+      {
+        pageNumbers.map((page) =>
+          typeof page === "number" ? (
+            <a
+              href={getPageUrl(page)}
+              class={`pagination__page ${
+                page === currentPage ? "pagination__page--active" : ""
+              }`}
+              aria-label={`Page ${page}`}
+              aria-current={page === currentPage ? "page" : undefined}
+            >
+              {page}
+            </a>
+          ) : (
+            <span class="pagination__ellipsis">{page}</span>
+          )
+        )
+      }
+    </div>
+
+    {
+      currentPage < totalPages ? (
+        <a
+          href={getPageUrl(currentPage + 1)}
+          class="pagination__button pagination__button--next"
+          aria-label="Next page"
+        >
+          Next →
+        </a>
+      ) : (
+        <span class="pagination__button pagination__button--next pagination__button--disabled">
+          Next →
+        </span>
+      )
+    }
+  </div>
+</nav>
+
+<style>
+  .pagination {
+    margin-top: 4rem;
+  }
+
+  .pagination__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .pagination__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #6366f1;
+    text-decoration: none;
+    background: #fff;
+    border: 2px solid #6366f1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .pagination__button:hover:not(.pagination__button--disabled) {
+    background: #6366f1;
+    color: #fff;
+  }
+
+  .pagination__button--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #d1d5db;
+    color: #9ca3af;
+  }
+
+  .pagination__pages {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .pagination__page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-decoration: none;
+    background: #fff;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .pagination__page:hover {
+    border-color: #6366f1;
+    color: #6366f1;
+  }
+
+  .pagination__page--active {
+    background: #6366f1;
+    border-color: #6366f1;
+    color: #fff;
+  }
+
+  .pagination__page--active:hover {
+    background: #4f46e5;
+    border-color: #4f46e5;
+  }
+
+  .pagination__ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    color: #9ca3af;
+    font-weight: 600;
+  }
+
+  @media (max-width: 640px) {
+    .pagination__container {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .pagination__button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
