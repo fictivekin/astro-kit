@@ -1,3 +1,7 @@
+---
+import { ClientRouter, fade } from "astro:transitions";
+---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -6,9 +10,20 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>Astro Basics</title>
+    <ClientRouter />
   </head>
   <body>
-    <slot />
+    <header>
+      <div class="header__container">
+        <a href="/">HOME.</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/resources">Resources</a>
+      </div>
+    </header>
+    <main transition:animate={fade({ duration: "0.5s" })}>
+      <slot />
+    </main>
   </body>
 </html>
 
