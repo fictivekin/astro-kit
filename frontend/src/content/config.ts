@@ -1,11 +1,11 @@
 import { defineCollection } from 'astro:content';
-import { fetchHomepage, fetchPageBySlug } from '../lib/queries/page';
-import { fetchAllPosts, fetchPostsByTopic } from '../lib/queries/post';
-import { fetchMainNavigation, fetchFooterNavigation } from '../lib/queries/navigation';
-import { sanityClient } from '../lib/sanity';
-import { pageZ } from '../lib/schemas/page';
-import { postZ } from '../lib/schemas/post';
-import { mainNavigationZ, footerNavigationZ } from '../lib/schemas/navigation';
+import { fetchHomepage, fetchPageBySlug } from '@/lib/queries/page';
+import { fetchAllPosts, fetchPostsByTopic } from '@/lib/queries/post';
+import { fetchMainNavigation, fetchFooterNavigation } from '@/lib/queries/navigation';
+import { sanityClient } from '@/lib/sanity';
+import { pageZ } from '@/lib/schemas/page';
+import { postZ } from '@/lib/schemas/post';
+import { mainNavigationZ, footerNavigationZ } from '@/lib/schemas/navigation';
 
 // Home collection - single entry for homepage
 const homeCollection = defineCollection({

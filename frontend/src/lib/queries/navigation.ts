@@ -1,5 +1,5 @@
-import { sanityClient } from "../sanity";
-import { mainNavigationZ, footerNavigationZ } from "../schemas/navigation";
+import { sanityClient } from "@/lib/sanity";
+import { mainNavigationZ, footerNavigationZ } from "@/lib/schemas/navigation";
 
 // Reusable GROQ fragments for navigation
 const link = `

@@ -1,5 +1,5 @@
-import { sanityClient } from "../sanity";
-import { postZ } from "../schemas/post";
+import { sanityClient } from "@/lib/sanity";
+import { postZ } from "@/lib/schemas/post";
 
 // Reusable GROQ fragments for post data
 

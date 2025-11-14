@@ -1,11 +1,11 @@
 ---
 import { getCollection } from "astro:content";
-import ResolvedLink from "../components/elements/ResolvedLink.astro";
+import ResolvedLink from "@/components/elements/ResolvedLink.astro";
 import type {
   NavigationItem,
   NavigationColumn,
   SocialPlatform,
-} from "../lib/schemas/navigation";
+} from "@/lib/schemas/navigation";
 
 // Fetch footer navigation from content collection
 const footerNavigationEntries = await getCollection("footerNavigation");

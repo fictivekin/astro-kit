@@ -1,6 +1,6 @@
 ---
-import { resolveLink } from "../../lib/linkResolver";
-import type { Link } from "../../lib/schemas/navigation";
+import { resolveLink } from "@/lib/linkResolver";
+import type { Link } from "@/lib/schemas/navigation";
 
 interface Props {
   link: Link | undefined;
@@ -18,4 +18,3 @@ const label = link?.label || href;
 <a href={href} target={target} rel={rel} class={className}>
   <slot>{label}</slot>
 </a>
-
