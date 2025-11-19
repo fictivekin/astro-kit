@@ -3,6 +3,13 @@ import { PortableText } from "astro-portabletext";
 import Heading from "@/components/elements/Heading/Heading.astro";
 import Media from "@/components/elements/Media/Media.astro";
 import Cta from "@/components/elements/Cta/Cta.astro";
+import type { Feature } from "@/lib/schemas/page";
+
+interface Props {
+  feature: Feature;
+  lazyLoad?: boolean;
+  semanticLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+}
 
 const { feature, lazyLoad = true, semanticLevel = "h2" } = Astro.props;
 

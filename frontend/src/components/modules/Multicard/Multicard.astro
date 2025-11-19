@@ -3,6 +3,13 @@ import { PortableText } from "astro-portabletext";
 import Heading from "@/components/elements/Heading/Heading.astro";
 import Card from "@/components/elements/Card/Card.astro";
 import Cta from "@/components/elements/Cta/Cta.astro";
+import type { Multicard } from "@/lib/schemas/page";
+
+interface Props {
+  multicard: Multicard;
+  lazyLoad?: boolean;
+  semanticLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+}
 
 const { multicard, lazyLoad = true, semanticLevel = "h2" } = Astro.props;
 
@@ -55,7 +62,7 @@ const {
 
     <div class={`multicard__grid multicard__grid--cols-${columns}`}>
       {
-        multicardItems.map((card: any) => (
+        multicardItems.map((card) => (
           <Card card={card} lazyLoad={lazyLoad} semanticLevel="h3" />
         ))
       }

@@ -28,22 +28,7 @@ export const linkZ = z.object({
 });
 
 // Navigation item schema with recursive children
-export const navigationItemZ: z.ZodType<{
-  link?: {
-    label?: string | undefined;
-    linkType?: string | undefined;
-    href?: string | undefined;
-    hash?: string | undefined;
-    page?: { _type: string; slug?: { current: string } | undefined } | undefined;
-    simplePage?: { _type: string; slug?: { current: string } | undefined } | undefined;
-    post?: { _type: string; slug?: { current: string } | undefined } | undefined;
-    file?: { asset: { _id: string; url: string; metadata?: { dimensions?: { width: number; height: number } | undefined } | undefined } } | undefined;
-    openInNewTab?: boolean | undefined;
-    onClick?: string | undefined;
-  } | undefined;
-  linkText?: string | undefined;
-  children?: Array<any> | undefined;
-}> = z.lazy(() =>
+export const navigationItemZ: any = z.lazy(() =>
   z.object({
     link: nullToUndefined(linkZ),
     linkText: nullToUndefined(z.string()),

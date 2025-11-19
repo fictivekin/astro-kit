@@ -1,9 +1,10 @@
 ---
 import { PortableText } from "astro-portabletext";
 import StripPTag from "./StripPTag.astro";
+import type { PortableText as PortableTextType } from "@/lib/schemas/page";
 
 interface Props {
-  text: any;
+  text: PortableTextType;
   semanticLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 

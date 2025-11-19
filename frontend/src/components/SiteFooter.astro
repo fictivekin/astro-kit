@@ -1,15 +1,14 @@
 ---
 import { getCollection } from "astro:content";
 import ResolvedLink from "@/components/elements/ResolvedLink.astro";
-import type {
-  NavigationItem,
-  NavigationColumn,
-  SocialPlatform,
-} from "@/lib/schemas/navigation";
+import type { FooterNavigation } from "@/lib/schemas/navigation";
+
+interface Props {}
 
 // Fetch footer navigation from content collection
 const footerNavigationEntries = await getCollection("footerNavigation");
-const footerNavigation = footerNavigationEntries[0]?.data;
+const footerNavigation: FooterNavigation | undefined =
+  footerNavigationEntries[0]?.data;
 
 const brandingText = footerNavigation?.brandingText;
 const navigationColumns = footerNavigation?.navigationColumns || [];
@@ -33,14 +32,14 @@ const currentYear = new Date().getFullYear();
     {
       navigationColumns.length > 0 && (
         <div class="footer__navigation">
-          {navigationColumns.map((column: NavigationColumn) => (
+          {navigationColumns.map((column) => (
             <div class="footer__column">
               {column.title && (
                 <h3 class="footer__column-title">{column.title}</h3>
               )}
               {column.items && column.items.length > 0 && (
                 <ul class="footer__nav-list">
-                  {column.items.map((item: NavigationItem) => (
+                  {column.items.map((item) => (
                     <li>
                       <ResolvedLink link={item.link} />
                       {item.linkText && (
@@ -48,7 +47,7 @@ const currentYear = new Date().getFullYear();
                       )}
                       {item.children && item.children.length > 0 && (
                         <ul class="footer__nav-list--nested">
-                          {item.children.map((child: NavigationItem) => (
+                          {item.children.map((child: any) => (
                             <li>
                               <ResolvedLink link={child.link} />
                               {child.linkText && (
@@ -74,7 +73,7 @@ const currentYear = new Date().getFullYear();
       platforms.length > 0 && (
         <div class="footer__social">
           <ul class="footer__social-list">
-            {platforms.map((platform: SocialPlatform) => (
+            {platforms.map((platform) => (
               <li>
                 <a
                   href={platform.url}
@@ -95,7 +94,7 @@ const currentYear = new Date().getFullYear();
         legalNavigation.length > 0 && (
           <nav class="footer__legal">
             <ul class="footer__legal-list">
-              {legalNavigation.map((item: NavigationItem) => (
+              {legalNavigation.map((item) => (
                 <li>
                   <ResolvedLink link={item.link} />
                 </li>

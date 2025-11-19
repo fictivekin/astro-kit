@@ -2,61 +2,10 @@
 import { PortableText } from "astro-portabletext";
 import Heading from "@/components/elements/Heading/Heading.astro";
 import Media from "@/components/elements/Media/Media.astro";
+import type { MulticardItem } from "@/lib/schemas/page";
 
 interface Props {
-  card: {
-    media?: {
-      type?: string;
-      image?: {
-        asset?: {
-          _id: string;
-          url: string;
-        };
-        altText?: string;
-      };
-      video?: {
-        asset?: {
-          _id: string;
-          url: string;
-        };
-      };
-    };
-    eyebrow?: string;
-    title?: any;
-    subhead?: any;
-    body?: any;
-    makeClickable?: boolean;
-    link?: {
-      label?: string;
-      linkType?: string;
-      href?: string;
-      hash?: string;
-      page?: {
-        _type: string;
-        slug?: {
-          current: string;
-        };
-      };
-      simplePage?: {
-        _type: string;
-        slug?: {
-          current: string;
-        };
-      };
-      post?: {
-        _type: string;
-        slug?: {
-          current: string;
-        };
-      };
-      file?: {
-        asset?: {
-          _id: string;
-          url: string;
-        };
-      };
-    };
-  };
+  card: MulticardItem;
   lazyLoad?: boolean;
   semanticLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
@@ -95,25 +44,29 @@ const CardWrapper = card.makeClickable && cardHref ? "a" : "div";
 <CardWrapper
   href={card.makeClickable ? cardHref : undefined}
   target={card.makeClickable && cardTarget === "_blank" ? "_blank" : undefined}
-  rel={card.makeClickable && cardTarget === "_blank" ? "noopener noreferrer" : undefined}
+  rel={card.makeClickable && cardTarget === "_blank"
+    ? "noopener noreferrer"
+    : undefined}
   class={`card ${card.makeClickable ? "card--clickable" : ""}`}
 >
-  {card.media && (
-    <div class="card__media">
-      <Media media={card.media} lazyLoad={lazyLoad} />
-    </div>
-  )}
+  {
+    card.media && (
+      <div class="card__media">
+        <Media media={card.media} lazyLoad={lazyLoad} />
+      </div>
+    )
+  }
 
   <div class="card__content">
-      {card.eyebrow && <p class="card__eyebrow">{card.eyebrow}</p>}
+    {card.eyebrow && <p class="card__eyebrow">{card.eyebrow}</p>}
 
-      {
-        card.title?.length && (
-          <div class="card__title">
-            <Heading text={card.title} semanticLevel={semanticLevel} />
-          </div>
-        )
-      }
+    {
+      card.title?.length && (
+        <div class="card__title">
+          <Heading text={card.title} semanticLevel={semanticLevel} />
+        </div>
+      )
+    }
 
     {
       card.subhead?.length > 0 && (
@@ -141,7 +94,9 @@ const CardWrapper = card.makeClickable && cardHref ? "a" : "div";
     background-color: #f8f8f8;
     border-radius: 0.5rem;
     overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
   }
 
   .card--clickable {
@@ -215,4 +170,3 @@ const CardWrapper = card.makeClickable && cardHref ? "a" : "div";
     margin-bottom: 0;
   }
 </style>
-

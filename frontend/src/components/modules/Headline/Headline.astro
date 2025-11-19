@@ -2,6 +2,13 @@
 import { PortableText } from "astro-portabletext";
 import RichTextHeading from "@/components/elements/Heading/RichTextHeading.astro";
 import Cta from "@/components/elements/Cta/Cta.astro";
+import type { Headline } from "@/lib/schemas/page";
+
+interface Props {
+  headline: Headline;
+  lazyLoad?: boolean;
+  semanticLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+}
 
 const { headline, semanticLevel = "h2" } = Astro.props;
 

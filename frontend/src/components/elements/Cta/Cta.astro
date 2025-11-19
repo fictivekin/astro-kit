@@ -1,8 +1,9 @@
 ---
 import Button from "@/components/elements/Button/Button.astro";
+import type { Cta } from "@/lib/schemas/page";
 
 interface Props {
-  cta?: any[];
+  cta?: Cta[];
 }
 
 const { cta = [] } = Astro.props;
@@ -11,7 +12,7 @@ const { cta = [] } = Astro.props;
 {
   cta && cta.length > 0 && (
     <>
-      {cta.map((button: any) => (
+      {cta.map((button) => (
         <Button
           label={button.label}
           variant={button.variant}

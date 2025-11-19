@@ -1,15 +1,16 @@
 ---
 import { componentMap } from "@/lib/componentMap";
+import type { Section } from "@/lib/schemas/page";
 
 interface Props {
-  sections?: any[];
+  sections?: Section[];
 }
 
 const { sections = [] } = Astro.props;
 ---
 
 {
-  sections.map((section: any, index: number) => {
+  sections.map((section, index) => {
     const Component = componentMap[section._type];
 
     const lazyLoad = index > 2;

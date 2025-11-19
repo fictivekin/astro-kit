@@ -1,13 +1,13 @@
 ---
 import { Picture } from "astro:assets";
+import type { Media } from "@/lib/schemas/page";
 
 interface Props {
-  media: any;
+  media: Media;
   lazyLoad?: boolean;
 }
 
 const { media, lazyLoad = true } = Astro.props;
-const fetchpriority = lazyLoad ? "auto" : "high";
 ---
 
 {
@@ -19,11 +19,10 @@ const fetchpriority = lazyLoad ? "auto" : "high";
         formats={["avif", "webp"]}
         widths={[400, 800, 1200]}
         sizes="(max-width: 768px) 100vw, (max-width: 968px) 100vw, 50vw"
-        width={media.image.asset.metadata?.dimensions?.width}
-        height={media.image.asset.metadata?.dimensions?.height}
+        width={media.image.asset.metadata?.dimensions?.width ?? 1200}
+        height={media.image.asset.metadata?.dimensions?.height ?? 800}
         class="media__image"
         loading={lazyLoad ? "lazy" : "eager"}
-        fetchpriority={fetchpriority}
       />
     </div>
   )
