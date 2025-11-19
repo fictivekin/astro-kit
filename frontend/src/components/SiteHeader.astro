@@ -12,8 +12,59 @@ const mainNavigation: MainNavigation | undefined =
 const navItems = mainNavigation?.items || [];
 ---
 
-<header>
+<header class="site-header">
   <nav class="header__container">
-    {navItems.map((item) => <ResolvedLink link={item.link} />)}
+    <div class="header__nav">
+      {
+        navItems.map((item) => (
+          <ResolvedLink link={item.link} class="header__link" />
+        ))
+      }
+    </div>
   </nav>
 </header>
+
+<style>
+  .site-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .header__nav {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .header__nav :global(.header__link) {
+    color: #333333;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: color 0.2s ease;
+  }
+
+  .header__nav :global(.header__link:hover) {
+    color: #5dbea3;
+  }
+
+  @media (max-width: 768px) {
+    .site-header {
+      padding: 1rem 1.5rem;
+    }
+
+    .header__nav {
+      gap: 1.5rem;
+    }
+  }
+</style>
