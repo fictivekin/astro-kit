@@ -55,15 +55,20 @@ export const mediaZ = nullToUndefined(z.object({
 }));
 
 // CTA schema (used across multiple section types)
-
 export const ctaZ = z.object({
-  variant: nullToUndefined(z.string()),
-  size: nullToUndefined(z.string()),
-  label: nullToUndefined(z.string()),
-  linkType: nullToUndefined(z.string()),
-  internalLink: nullToUndefined(internalLinkZ),
-  externalLink: nullToUndefined(z.string()),
-  anchorLink: nullToUndefined(z.string()),
+  variant: nullToUndefined(z.enum(['primary', 'secondary', 'tertiary'])),
+  size: nullToUndefined(z.enum(['small', 'regular', 'large'])),
+  label: z.string(),
+  linkType: nullToUndefined(z.enum(['href', 'page', 'simplePage', 'post', 'file', 'hash'])),
+  href: nullToUndefined(z.string()),
+  hash: nullToUndefined(z.string()),
+  page: nullToUndefined(internalLinkZ),
+  simplePage: nullToUndefined(internalLinkZ),
+  post: nullToUndefined(internalLinkZ),
+  file: nullToUndefined(z.object({
+    asset: assetZ,
+  })),
+  openInNewTab: nullToUndefined(z.boolean()),
 });
 
 // Section schemas - one for each section type matching GROQ queries

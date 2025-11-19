@@ -33,12 +33,27 @@ const cta = `
     size,
     label,
     linkType,
-    internalLink->{
+    href,
+    hash,
+    page->{
       _type,
       slug
     },
-    externalLink,
-    anchorLink
+    simplePage->{
+      _type,
+      slug
+    },
+    post->{
+      _type,
+      slug
+    },
+    file {
+      asset->{
+        _id,
+        url
+      }
+    },
+    openInNewTab
   }
 `;
 

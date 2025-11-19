@@ -1,47 +1,54 @@
 ---
+import { resolveLink } from "@/lib/linkResolver";
+import type { Cta } from "@/lib/schemas/page";
+
 interface Props {
   label: string;
-  variant?: 'primary' | 'secondary' | 'tertiary';
-  size?: 'small' | 'regular' | 'large';
-  linkType?: 'internal' | 'external' | 'anchor';
-  internalLink?: {
-    _type: string;
-    slug?: {
-      current: string;
-    };
-  };
-  externalLink?: string;
-  anchorLink?: string;
+  variant?: "primary" | "secondary" | "tertiary";
+  size?: "small" | "regular" | "large";
+  linkType?: Cta["linkType"];
+  href?: string;
+  hash?: string;
+  page?: Cta["page"];
+  simplePage?: Cta["simplePage"];
+  post?: Cta["post"];
+  file?: Cta["file"];
+  openInNewTab?: boolean;
 }
 
 const {
   label,
-  variant = 'primary',
-  size = 'regular',
+  variant = "primary",
+  size = "regular",
   linkType,
-  internalLink,
-  externalLink,
-  anchorLink,
+  href: hrefProp,
+  hash,
+  page,
+  simplePage,
+  post,
+  file,
+  openInNewTab,
 } = Astro.props;
 
-// Determine the href based on link type
-let href = '#';
-let target = '_self';
-
-if (linkType === 'external' && externalLink) {
-  href = externalLink;
-  target = '_blank';
-} else if (linkType === 'internal' && internalLink?.slug?.current) {
-  href = `/${internalLink.slug.current}`;
-} else if (linkType === 'anchor' && anchorLink) {
-  href = anchorLink;
-}
+// Build link object for resolver
+const linkObj = {
+  linkType,
+  href: hrefProp,
+  hash,
+  page,
+  simplePage,
+  post,
+  file,
+  openInNewTab,
+};
+const href = resolveLink(linkObj);
+const target = openInNewTab ? "_blank" : "_self";
 ---
 
 <a
   href={href}
   target={target}
-  rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+  rel={target === "_blank" ? "noopener noreferrer" : undefined}
   class={`button button--${variant} button--${size}`}
 >
   {label}
@@ -107,4 +114,3 @@ if (linkType === 'external' && externalLink) {
     color: #5dbea3;
   }
 </style>
-

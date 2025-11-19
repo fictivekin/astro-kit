@@ -18,12 +18,15 @@ const { cta = [] } = Astro.props;
           variant={button.variant}
           size={button.size}
           linkType={button.linkType}
-          internalLink={button.internalLink}
-          externalLink={button.externalLink}
-          anchorLink={button.anchorLink}
+          href={button.href}
+          hash={button.hash}
+          page={button.page}
+          simplePage={button.simplePage}
+          post={button.post}
+          file={button.file}
+          openInNewTab={button.openInNewTab}
         />
       ))}
     </>
   )
 }
-
