@@ -5,7 +5,19 @@ import { image } from "@/lib/queries/fragments";
 // Reusable GROQ fragments for post data
 
 const heroImage = `
-  hero${image}
+  hero {
+    asset->{
+      _id,
+      url,
+      metadata {
+        dimensions {
+          width,
+          height
+        }
+      }
+    },
+    altText
+  }
 `;
 
 const author = `
@@ -16,7 +28,7 @@ const author = `
     slug,
     position,
     company,
-    ${image.replace('image', 'photo')},
+    ${image.replace("image", "photo")},
     bio
   }
 `;
@@ -57,11 +69,11 @@ const seoFields = `
   noIndex,
   ogTitle,
   ogDescription,
-  ${image.replace('image', 'ogImage')},
+  ${image.replace("image", "ogImage")},
   twitterCard,
   twitterTitle,
   twitterDescription,
-  ${image.replace('image', 'twitterImage')}
+  ${image.replace("image", "twitterImage")}
 `;
 
 // Fetch single post by slug with all data
@@ -120,7 +132,7 @@ export async function fetchAllPosts() {
     return [];
   }
 
-  const parsed = results.map(result => postZ.parse(result));
+  const parsed = results.map((result) => postZ.parse(result));
 
   return parsed;
 }
@@ -151,7 +163,7 @@ export async function fetchPostsByTopic(topicSlug: string) {
     return [];
   }
 
-  return results.map(result => postZ.parse(result));
+  return results.map((result) => postZ.parse(result));
 }
 
 // Fetch posts filtered by format
@@ -180,6 +192,5 @@ export async function fetchPostsByFormat(formatSlug: string) {
     return [];
   }
 
-  return results.map(result => postZ.parse(result));
+  return results.map((result) => postZ.parse(result));
 }
-
