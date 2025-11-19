@@ -14,13 +14,6 @@ const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
 // Get posts for current page (first 5)
 const posts = allPosts.slice(0, POSTS_PER_PAGE);
 
-console.log(
-  "Resources index - Total posts:",
-  allPosts.length,
-  "Total pages:",
-  totalPages
-);
-
 // Get all topics for filter navigation
 const topics = await sanityClient.fetch<
   Array<{ slug: { current: string }; title: string }>

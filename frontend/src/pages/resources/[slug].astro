@@ -45,14 +45,6 @@ const calculateReadingTime = (body: any) => {
 const readingTime = postData.showReadingTime
   ? calculateReadingTime(postData.body)
   : null;
-
-// Debug logging
-console.log("Post body exists:", !!postData.body);
-console.log("Post body length:", postData.body?.length);
-console.log(
-  "Post body sample:",
-  postData.body ? JSON.stringify(postData.body).substring(0, 200) : "null"
-);
 ---
 
 <Layout>
