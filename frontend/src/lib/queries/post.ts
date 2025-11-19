@@ -1,22 +1,11 @@
 import { sanityClient } from "@/lib/sanity";
 import { postZ } from "@/lib/schemas/post";
+import { image } from "@/lib/queries/fragments";
 
 // Reusable GROQ fragments for post data
 
 const heroImage = `
-  heroImage {
-    asset->{
-      _id,
-      url,
-      metadata {
-        dimensions {
-          width,
-          height
-        }
-      }
-    },
-    altText
-  }
+  hero${image}
 `;
 
 const author = `
@@ -27,19 +16,7 @@ const author = `
     slug,
     position,
     company,
-    photo {
-      asset->{
-        _id,
-        url,
-        metadata {
-          dimensions {
-            width,
-            height
-          }
-        }
-      },
-      altText
-    },
+    ${image.replace('image', 'photo')},
     bio
   }
 `;
@@ -80,35 +57,11 @@ const seoFields = `
   noIndex,
   ogTitle,
   ogDescription,
-  ogImage {
-    asset->{
-      _id,
-      url,
-      metadata {
-        dimensions {
-          width,
-          height
-        }
-      }
-    },
-    altText
-  },
+  ${image.replace('image', 'ogImage')},
   twitterCard,
   twitterTitle,
   twitterDescription,
-  twitterImage {
-    asset->{
-      _id,
-      url,
-      metadata {
-        dimensions {
-          width,
-          height
-        }
-      }
-    },
-    altText
-  }
+  ${image.replace('image', 'twitterImage')}
 `;
 
 // Fetch single post by slug with all data

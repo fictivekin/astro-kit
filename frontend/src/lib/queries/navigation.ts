@@ -1,32 +1,11 @@
 import { sanityClient } from "@/lib/sanity";
 import { mainNavigationZ, footerNavigationZ } from "@/lib/schemas/navigation";
+import { linkFields } from "@/lib/queries/fragments";
 
 // Reusable GROQ fragments for navigation
 const link = `
   link {
-    label,
-    linkType,
-    href,
-    hash,
-    page->{
-      _type,
-      slug
-    },
-    simplePage->{
-      _type,
-      slug
-    },
-    post->{
-      _type,
-      slug
-    },
-    file {
-      asset->{
-        _id,
-        url
-      }
-    },
-    openInNewTab,
+    ${linkFields},
     onClick
   }
 `;
@@ -87,4 +66,3 @@ export async function fetchFooterNavigation() {
 
   return footerNavigationZ.parse(result);
 }
-

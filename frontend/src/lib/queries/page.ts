@@ -1,59 +1,13 @@
 import { sanityClient } from "@/lib/sanity";
 import { pageZ } from "@/lib/schemas/page";
+import { linkFields, media } from "@/lib/queries/fragments";
 
 // Reusable GROQ fragments
-const media = `
-  media {
-    type,
-    image {
-      asset->{
-        _id,
-        url,
-        metadata {
-          dimensions {
-            width,
-            height
-          }
-        }
-      },
-      altText
-    },
-    video {
-      asset->{
-        _id,
-        url
-      }
-    }
-  }
-`;
-
 const cta = `
   cta[] {
+    ${linkFields},
     variant,
-    size,
-    label,
-    linkType,
-    href,
-    hash,
-    page->{
-      _type,
-      slug
-    },
-    simplePage->{
-      _type,
-      slug
-    },
-    post->{
-      _type,
-      slug
-    },
-    file {
-      asset->{
-        _id,
-        url
-      }
-    },
-    openInNewTab
+    size
   }
 `;
 
@@ -115,28 +69,7 @@ const sectionFields = `
       "body": coalesce(body, []),
       makeClickable,
       link {
-        label,
-        linkType,
-        href,
-        hash,
-        page->{
-          _type,
-          slug
-        },
-        simplePage->{
-          _type,
-          slug
-        },
-        post->{
-          _type,
-          slug
-        },
-        file {
-          asset->{
-            _id,
-            url
-          }
-        }
+        ${linkFields}
       }
     }
   }
@@ -191,4 +124,3 @@ export async function fetchPageBySlug(slug: string) {
 
   return pageZ.parse(result);
 }
-
