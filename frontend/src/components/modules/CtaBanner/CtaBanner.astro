@@ -4,11 +4,12 @@ import Heading from "@/components/elements/Heading/Heading.astro";
 import Media from "@/components/elements/Media/Media.astro";
 import Cta from "@/components/elements/Cta/Cta.astro";
 import type { CtaBanner } from "@/lib/schemas/page";
+import type { SemanticLevel } from "@/lib/types";
 
 interface Props {
   ctaBanner: CtaBanner;
   lazyLoad?: boolean;
-  semanticLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  semanticLevel?: SemanticLevel;
 }
 
 const { ctaBanner, lazyLoad = true, semanticLevel = "h2" } = Astro.props;

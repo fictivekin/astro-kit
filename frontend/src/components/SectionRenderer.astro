@@ -1,6 +1,7 @@
 ---
 import { componentMap } from "@/lib/componentMap";
 import type { Section } from "@/lib/schemas/page";
+import type { SemanticLevel } from "@/lib/types";
 
 interface Props {
   sections?: Section[];
@@ -14,7 +15,7 @@ const { sections = [] } = Astro.props;
     const Component = componentMap[section._type];
 
     const lazyLoad = index > 2;
-    const semanticLevel = index > 0 ? "h2" : "h1";
+    const semanticLevel: SemanticLevel = index > 0 ? "h2" : "h1";
 
     if (Component) {
       return (

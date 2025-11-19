@@ -2,10 +2,11 @@
 import { PortableText } from "astro-portabletext";
 import StripPTag from "./StripPTag.astro";
 import type { PortableText as PortableTextType } from "@/lib/schemas/page";
+import type { SemanticLevel } from "@/lib/types";
 
 interface Props {
   text: PortableTextType;
-  semanticLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  semanticLevel?: SemanticLevel;
 }
 
 const { text, semanticLevel = "h2" } = Astro.props;
