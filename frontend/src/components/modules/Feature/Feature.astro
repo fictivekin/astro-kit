@@ -4,6 +4,7 @@ import Heading from "@/components/elements/Heading/Heading.astro";
 import Media from "@/components/elements/Media/Media.astro";
 import Cta from "@/components/elements/Cta/Cta.astro";
 import type { Feature } from "@/lib/schemas/page";
+import AstroHeart from "@/components/elements/AstroHeart/AstroHeart.astro";
 
 interface Props {
   feature: Feature;
@@ -53,6 +54,8 @@ const {
           </div>
         )
       }
+
+      <AstroHeart />
     </div>
   </div>
 </section>

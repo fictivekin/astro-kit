@@ -12,6 +12,7 @@ const style = `div * {
         }
 
         button {
+          cursor: pointer;
           width: 4rem;
           height: 4rem;
           border: none;
