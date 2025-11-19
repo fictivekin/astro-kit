@@ -63,7 +63,7 @@ const {
 
     <div class={`multicard__grid multicard__grid--cols-${columns}`}>
       {
-        multicardItems.map((card) => (
+        multicardItems?.map((card) => (
           <Card card={card} lazyLoad={lazyLoad} semanticLevel="h3" />
         ))
       }

@@ -1,9 +1,5 @@
 import { z } from 'astro:content';
-import { assetZ, slugZ, portableTextZ, imageAssetZ } from './page';
-
-// Helper to convert Sanity's null to TypeScript's undefined
-const nullToUndefined = <T extends z.ZodTypeAny>(schema: T) =>
-  schema.optional().nullable().transform(v => v ?? undefined);
+import { slugZ, portableTextZ, imageAssetZ } from './page';
 
 // People/Author schema
 export const peopleZ = z.object({
@@ -11,10 +7,10 @@ export const peopleZ = z.object({
   _type: z.literal('people'),
   name: z.string(),
   slug: slugZ,
-  position: nullToUndefined(z.string()),
-  company: nullToUndefined(z.string()),
-  photo: nullToUndefined(imageAssetZ),
-  bio: nullToUndefined(portableTextZ),
+  position: z.string().optional().nullable(),
+  company: z.string().optional().nullable(),
+  photo: imageAssetZ.optional().nullable(),
+  bio: portableTextZ.optional().nullable(),
 });
 
 // Topic reference schema
@@ -40,8 +36,8 @@ const postRefZ = z.object({
   title: z.string(),
   slug: z.string(),
   publishedOn: z.string(),
-  thumbnailText: nullToUndefined(z.string()),
-  heroImage: nullToUndefined(imageAssetZ),
+  thumbnailText: z.string().optional().nullable(),
+  heroImage: imageAssetZ.optional().nullable(),
 });
 
 // Full post schema
@@ -51,27 +47,27 @@ export const postZ = z.object({
   title: z.string(),
   slug: z.string(),
   publishedOn: z.string(),
-  thumbnailText: nullToUndefined(z.string()),
-  body: nullToUndefined(portableTextZ),
-  heroImage: nullToUndefined(imageAssetZ),
-  author: nullToUndefined(z.array(peopleZ)),
-  format: nullToUndefined(formatZ),
-  topics: nullToUndefined(z.array(topicZ)),
-  relatedPosts: nullToUndefined(z.array(postRefZ)),
-  showRelatedPosts: nullToUndefined(z.boolean()),
-  showTOC: nullToUndefined(z.boolean()),
-  showReadingTime: nullToUndefined(z.boolean()),
+  thumbnailText: z.string().optional().nullable(),
+  body: portableTextZ.optional().nullable(),
+  heroImage: imageAssetZ.optional().nullable(),
+  author: z.array(peopleZ).optional().nullable(),
+  format: formatZ.optional().nullable(),
+  topics: z.array(topicZ).optional().nullable(),
+  relatedPosts: z.array(postRefZ).optional().nullable(),
+  showRelatedPosts: z.boolean().optional().nullable(),
+  showTOC: z.boolean().optional().nullable(),
+  showReadingTime: z.boolean().optional().nullable(),
   // SEO fields
-  metaTitle: nullToUndefined(z.string()),
-  metaDescription: nullToUndefined(z.string()),
-  noIndex: nullToUndefined(z.boolean()),
-  ogTitle: nullToUndefined(z.string()),
-  ogDescription: nullToUndefined(z.string()),
-  ogImage: nullToUndefined(imageAssetZ),
-  twitterCard: nullToUndefined(z.string()),
-  twitterTitle: nullToUndefined(z.string()),
-  twitterDescription: nullToUndefined(z.string()),
-  twitterImage: nullToUndefined(imageAssetZ),
+  metaTitle: z.string().optional().nullable(),
+  metaDescription: z.string().optional().nullable(),
+  noIndex: z.boolean().optional().nullable(),
+  ogTitle: z.string().optional().nullable(),
+  ogDescription: z.string().optional().nullable(),
+  ogImage: imageAssetZ.optional().nullable(),
+  twitterCard: z.string().optional().nullable(),
+  twitterTitle: z.string().optional().nullable(),
+  twitterDescription: z.string().optional().nullable(),
+  twitterImage: imageAssetZ.optional().nullable(),
 });
 
 // Export TypeScript types inferred from schemas

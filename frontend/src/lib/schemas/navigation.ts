@@ -1,38 +1,34 @@
 import { z } from 'astro:content';
 import { slugZ, assetZ } from './page';
 
-// Helper to convert Sanity's null to TypeScript's undefined
-const nullToUndefined = <T extends z.ZodTypeAny>(schema: T) =>
-  schema.optional().nullable().transform(v => v ?? undefined);
-
 // Internal link reference (for navigation links)
 export const internalLinkZ = z.object({
   _type: z.string(),
-  slug: nullToUndefined(slugZ),
+  slug: slugZ.optional().nullable(),
 });
 
 // Link schema matching Sanity's link structure
 export const linkZ = z.object({
-  label: nullToUndefined(z.string()),
-  linkType: nullToUndefined(z.string()),
-  href: nullToUndefined(z.string()),
-  hash: nullToUndefined(z.string()),
-  page: nullToUndefined(internalLinkZ),
-  simplePage: nullToUndefined(internalLinkZ),
-  post: nullToUndefined(internalLinkZ),
-  file: nullToUndefined(z.object({
+  label: z.string().optional().nullable(),
+  linkType: z.string().optional().nullable(),
+  href: z.string().optional().nullable(),
+  hash: z.string().optional().nullable(),
+  page: internalLinkZ.optional().nullable(),
+  simplePage: internalLinkZ.optional().nullable(),
+  post: internalLinkZ.optional().nullable(),
+  file: z.object({
     asset: assetZ,
-  })),
-  openInNewTab: nullToUndefined(z.boolean()),
-  onClick: nullToUndefined(z.string()),
+  }).optional().nullable(),
+  openInNewTab: z.boolean().optional().nullable(),
+  onClick: z.string().optional().nullable(),
 });
 
 // Navigation item schema with recursive children
 export const navigationItemZ: any = z.lazy(() =>
   z.object({
-    link: nullToUndefined(linkZ),
-    linkText: nullToUndefined(z.string()),
-    children: nullToUndefined(z.array(navigationItemZ)),
+    link: linkZ.optional().nullable(),
+    linkText: z.string().optional().nullable(),
+    children: z.array(navigationItemZ).optional().nullable(),
   })
 );
 
@@ -40,13 +36,13 @@ export const navigationItemZ: any = z.lazy(() =>
 export const mainNavigationZ = z.object({
   _id: z.string(),
   _type: z.literal('mainNavigation'),
-  items: nullToUndefined(z.array(navigationItemZ)),
+  items: z.array(navigationItemZ).optional().nullable(),
 });
 
 // Footer navigation column schema
 export const navigationColumnZ = z.object({
-  title: nullToUndefined(z.string()),
-  items: nullToUndefined(z.array(navigationItemZ)),
+  title: z.string().optional().nullable(),
+  items: z.array(navigationItemZ).optional().nullable(),
 });
 
 // Social platform schema
@@ -59,11 +55,11 @@ export const socialPlatformZ = z.object({
 export const footerNavigationZ = z.object({
   _id: z.string(),
   _type: z.literal('footerNavigation'),
-  brandingText: nullToUndefined(z.string()),
-  navigationColumns: nullToUndefined(z.array(navigationColumnZ)),
-  platforms: nullToUndefined(z.array(socialPlatformZ)),
-  legalNavigation: nullToUndefined(z.array(navigationItemZ)),
-  copyrightText: nullToUndefined(z.string()),
+  brandingText: z.string().optional().nullable(),
+  navigationColumns: z.array(navigationColumnZ).optional().nullable(),
+  platforms: z.array(socialPlatformZ).optional().nullable(),
+  legalNavigation: z.array(navigationItemZ).optional().nullable(),
+  copyrightText: z.string().optional().nullable(),
 });
 
 // Export TypeScript types

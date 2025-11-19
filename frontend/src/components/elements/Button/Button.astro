@@ -4,16 +4,16 @@ import type { Cta } from "@/lib/schemas/page";
 
 interface Props {
   label: string;
-  variant?: "primary" | "secondary" | "tertiary";
-  size?: "small" | "regular" | "large";
+  variant?: "primary" | "secondary" | "tertiary" | null;
+  size?: "small" | "regular" | "large" | null;
   linkType?: Cta["linkType"];
-  href?: string;
-  hash?: string;
+  href?: string | null;
+  hash?: string | null;
   page?: Cta["page"];
   simplePage?: Cta["simplePage"];
   post?: Cta["post"];
   file?: Cta["file"];
-  openInNewTab?: boolean;
+  openInNewTab?: boolean | null;
 }
 
 const {

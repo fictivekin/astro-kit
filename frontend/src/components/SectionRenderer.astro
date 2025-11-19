@@ -4,14 +4,15 @@ import type { Section } from "@/lib/schemas/page";
 import type { SemanticLevel } from "@/lib/types";
 
 interface Props {
-  sections?: Section[];
+  sections?: Section[] | null;
 }
 
-const { sections = [] } = Astro.props;
+const { sections } = Astro.props;
+const sectionsArray = sections ?? [];
 ---
 
 {
-  sections.map((section, index) => {
+  sectionsArray.map((section, index) => {
     const Component = componentMap[section._type];
 
     const lazyLoad = index > 2;

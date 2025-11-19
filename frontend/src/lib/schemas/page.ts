@@ -1,21 +1,17 @@
 import { z } from 'astro:content';
 
-// Helper to convert Sanity's null to TypeScript's undefined
-const nullToUndefined = <T extends z.ZodTypeAny>(schema: T) =>
-  schema.optional().nullable().transform(v => v ?? undefined);
-
 // Base schemas for common structures
 
 // Asset reference from Sanity
 export const assetZ = z.object({
   _id: z.string(),
   url: z.string(),
-  metadata: nullToUndefined(z.object({
-    dimensions: nullToUndefined(z.object({
+  metadata: z.object({
+    dimensions: z.object({
       width: z.number(),
       height: z.number(),
-    })),
-  })),
+    }).optional().nullable(),
+  }).optional().nullable(),
 });
 
 // Slug object
@@ -26,7 +22,7 @@ export const slugZ = z.object({
 // Internal link reference (used in CTAs and multicard links)
 export const internalLinkZ = z.object({
   _type: z.string(),
-  slug: nullToUndefined(slugZ),
+  slug: slugZ.optional().nullable(),
 });
 
 // Portable Text - flexible array with passthrough for block content
@@ -41,34 +37,34 @@ export const portableTextZ = z.array(
 
 export const imageAssetZ = z.object({
   asset: assetZ,
-  altText: nullToUndefined(z.string()),
+  altText: z.string().optional().nullable(),
 });
 
 export const videoAssetZ = z.object({
   asset: assetZ,
 });
 
-export const mediaZ = nullToUndefined(z.object({
-  type: nullToUndefined(z.string()),
-  image: nullToUndefined(imageAssetZ),
-  video: nullToUndefined(videoAssetZ),
-}));
+export const mediaZ = z.object({
+  type: z.string().optional().nullable(),
+  image: imageAssetZ.optional().nullable(),
+  video: videoAssetZ.optional().nullable(),
+}).optional().nullable();
 
 // CTA schema (used across multiple section types)
 export const ctaZ = z.object({
-  variant: nullToUndefined(z.enum(['primary', 'secondary', 'tertiary'])),
-  size: nullToUndefined(z.enum(['small', 'regular', 'large'])),
+  variant: z.enum(['primary', 'secondary', 'tertiary']).optional().nullable(),
+  size: z.enum(['small', 'regular', 'large']).optional().nullable(),
   label: z.string(),
-  linkType: nullToUndefined(z.enum(['href', 'page', 'simplePage', 'post', 'file', 'hash'])),
-  href: nullToUndefined(z.string()),
-  hash: nullToUndefined(z.string()),
-  page: nullToUndefined(internalLinkZ),
-  simplePage: nullToUndefined(internalLinkZ),
-  post: nullToUndefined(internalLinkZ),
-  file: nullToUndefined(z.object({
+  linkType: z.enum(['href', 'page', 'simplePage', 'post', 'file', 'hash']).optional().nullable(),
+  href: z.string().optional().nullable(),
+  hash: z.string().optional().nullable(),
+  page: internalLinkZ.optional().nullable(),
+  simplePage: internalLinkZ.optional().nullable(),
+  post: internalLinkZ.optional().nullable(),
+  file: z.object({
     asset: assetZ,
-  })),
-  openInNewTab: nullToUndefined(z.boolean()),
+  }).optional().nullable(),
+  openInNewTab: z.boolean().optional().nullable(),
 });
 
 // Section schemas - one for each section type matching GROQ queries
@@ -76,87 +72,87 @@ export const ctaZ = z.object({
 // CtaBanner section
 const ctaBannerZ = z.object({
   _type: z.literal('ctaBanner'),
-  eyebrow: nullToUndefined(z.string()),
-  title: nullToUndefined(z.string()),
+  eyebrow: z.string().optional().nullable(),
+  title: z.string().optional().nullable(),
   body: portableTextZ,
-  alignment: nullToUndefined(z.string()),
-  theme: nullToUndefined(z.string()),
+  alignment: z.string().optional().nullable(),
+  theme: z.string().optional().nullable(),
   media: mediaZ,
-  cta: nullToUndefined(z.array(ctaZ)),
+  cta: z.array(ctaZ).optional().nullable(),
 });
 
 // Feature section
 const featureZ = z.object({
   _type: z.literal('feature'),
-  title: nullToUndefined(z.string()),
+  title: z.string().optional().nullable(),
   body: portableTextZ,
-  theme: nullToUndefined(z.string()),
-  mediaSide: nullToUndefined(z.string()),
+  theme: z.string().optional().nullable(),
+  mediaSide: z.string().optional().nullable(),
   media: mediaZ,
-  cta: nullToUndefined(z.array(ctaZ)),
+  cta: z.array(ctaZ).optional().nullable(),
 });
 
 // Headline section
 const headlineZ = z.object({
   _type: z.literal('headline'),
-  theme: nullToUndefined(z.string()),
-  eyebrow: nullToUndefined(z.string()),
+  theme: z.string().optional().nullable(),
+  eyebrow: z.string().optional().nullable(),
   title: portableTextZ,
   subhead: portableTextZ,
   body: portableTextZ,
-  alignment: nullToUndefined(z.string()),
-  cta: nullToUndefined(z.array(ctaZ)),
+  alignment: z.string().optional().nullable(),
+  cta: z.array(ctaZ).optional().nullable(),
 });
 
 // Hero section
 const heroZ = z.object({
   _type: z.literal('hero'),
-  theme: nullToUndefined(z.string()),
-  eyebrow: nullToUndefined(z.string()),
+  theme: z.string().optional().nullable(),
+  eyebrow: z.string().optional().nullable(),
   title: portableTextZ,
   subhead: portableTextZ,
   body: portableTextZ,
   media: mediaZ,
-  cta: nullToUndefined(z.array(ctaZ)),
+  cta: z.array(ctaZ).optional().nullable(),
 });
 
 // Multicard link schema (more complex than regular CTA)
-const multicardLinkZ = nullToUndefined(z.object({
-  label: nullToUndefined(z.string()),
-  linkType: nullToUndefined(z.string()),
-  href: nullToUndefined(z.string()),
-  hash: nullToUndefined(z.string()),
-  page: nullToUndefined(internalLinkZ),
-  simplePage: nullToUndefined(internalLinkZ),
-  post: nullToUndefined(internalLinkZ),
-  file: nullToUndefined(z.object({
+const multicardLinkZ = z.object({
+  label: z.string().optional().nullable(),
+  linkType: z.string().optional().nullable(),
+  href: z.string().optional().nullable(),
+  hash: z.string().optional().nullable(),
+  page: internalLinkZ.optional().nullable(),
+  simplePage: internalLinkZ.optional().nullable(),
+  post: internalLinkZ.optional().nullable(),
+  file: z.object({
     asset: assetZ,
-  })),
-}));
+  }).optional().nullable(),
+}).optional().nullable();
 
 // Multicard item
 const multicardItemZ = z.object({
   media: mediaZ,
-  eyebrow: nullToUndefined(z.string()),
-  title: nullToUndefined(z.string()),
+  eyebrow: z.string().optional().nullable(),
+  title: z.string().optional().nullable(),
   subhead: portableTextZ,
   body: portableTextZ,
-  makeClickable: nullToUndefined(z.boolean()),
+  makeClickable: z.boolean().optional().nullable(),
   link: multicardLinkZ,
 });
 
 // Multicard section
 const multicardZ = z.object({
   _type: z.literal('multicard'),
-  theme: nullToUndefined(z.string()),
-  eyebrow: nullToUndefined(z.string()),
-  title: nullToUndefined(z.string()),
+  theme: z.string().optional().nullable(),
+  eyebrow: z.string().optional().nullable(),
+  title: z.string().optional().nullable(),
   subhead: portableTextZ,
   body: portableTextZ,
-  layout: nullToUndefined(z.string()),
-  columns: nullToUndefined(z.string()), // Note: columns is a string in the data, not a number
-  cta: nullToUndefined(z.array(ctaZ)),
-  multicardItems: nullToUndefined(z.array(multicardItemZ)),
+  layout: z.string().optional().nullable(),
+  columns: z.string().optional().nullable(), // Note: columns is a string in the data, not a number
+  cta: z.array(ctaZ).optional().nullable(),
+  multicardItems: z.array(multicardItemZ).optional().nullable(),
 });
 
 // Union schema for all section types using discriminated union on _type
@@ -172,10 +168,10 @@ const sectionZ = z.discriminatedUnion('_type', [
 export const pageZ = z.object({
   _id: z.string(),
   _type: z.string(),
-  title: nullToUndefined(z.string()),
+  title: z.string().optional().nullable(),
   slug: z.string(),
-  sections: nullToUndefined(z.array(sectionZ)),
-  noIndex: nullToUndefined(z.boolean()),
+  sections: z.array(sectionZ).optional().nullable(),
+  noIndex: z.boolean().optional().nullable(),
 });
 
 // Export TypeScript types inferred from schemas

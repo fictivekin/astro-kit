@@ -3,8 +3,9 @@ import type { Link } from './schemas/navigation';
 /**
  * Resolves a Sanity link object to an href string
  * Handles internal pages, external URLs, hashes, files, and posts
+ * Accepts null and undefined values from Sanity
  */
-export function resolveLink(link: Link | undefined): string {
+export function resolveLink(link: Link | undefined | null): string {
   if (!link) return '#';
 
   const { linkType, href, hash, page, simplePage, post, file } = link;
