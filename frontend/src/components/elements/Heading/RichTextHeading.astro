@@ -1,6 +1,5 @@
 ---
 import { PortableText } from "astro-portabletext";
-import StripPTag from "./StripPTag.astro";
 import type { PortableText as PortableTextType } from "@/lib/schemas/page";
 import type { SemanticLevel } from "@/lib/types";
 
@@ -10,6 +9,9 @@ interface Props {
 }
 
 const { text, semanticLevel = "h2" } = Astro.props;
+
+// Inline component to render normal blocks as fragments instead of <p> tags
+const StripPTag = (props: any) => props.children;
 
 // Custom component to render normal blocks as fragments instead of <p> tags
 const customComponents = {
