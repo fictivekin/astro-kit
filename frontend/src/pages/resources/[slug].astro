@@ -6,6 +6,8 @@ import { PortableText } from "astro-portabletext";
 import { getCollection } from "astro:content";
 import { fetchPostBySlug } from "@/lib/queries/post";
 
+export const prerender = true;
+
 // Get all posts for static generation
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
@@ -45,9 +47,33 @@ const calculateReadingTime = (body: any) => {
 const readingTime = postData.showReadingTime
   ? calculateReadingTime(postData.body)
   : null;
+
+// Prepare SEO data with fallbacks
+const seoTitle = postData.seoTitle || postData.title;
+const seoDescription =
+  postData.seoDescription || postData.thumbnailText || undefined;
+const seoNoIndex = postData.noIndex ?? undefined;
+
+// Prepare OG/Social image - prefer social image, fallback to hero image
+const seoImage =
+  postData.socialImage?.asset?.url ||
+  postData.heroImage?.asset?.url ||
+  undefined;
+const seoImageAlt =
+  postData.socialImageAlt ||
+  postData.socialImage?.altText ||
+  postData.heroImage?.altText ||
+  undefined;
 ---
 
-<Layout>
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  noIndex={seoNoIndex}
+  image={seoImage}
+  imageAlt={seoImageAlt}
+  ogType="article"
+>
   <article class="post">
     {
       postData.heroImage && (

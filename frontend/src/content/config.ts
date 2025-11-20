@@ -2,10 +2,12 @@ import { defineCollection } from 'astro:content';
 import { fetchHomepage, fetchPageBySlug } from '@/lib/queries/page';
 import { fetchAllPosts, fetchPostsByTopic } from '@/lib/queries/post';
 import { fetchMainNavigation, fetchFooterNavigation } from '@/lib/queries/navigation';
+import { fetchSiteSettings } from '@/lib/queries/siteSettings';
 import { sanityClient } from '@/lib/sanity';
 import { pageZ } from '@/lib/schemas/page';
 import { postZ } from '@/lib/schemas/post';
 import { mainNavigationZ, footerNavigationZ } from '@/lib/schemas/navigation';
+import { siteSettingsZ } from '@/lib/schemas/siteSettings';
 
 // Home collection - single entry for homepage
 const homeCollection = defineCollection({
@@ -136,12 +138,30 @@ const footerNavigationCollection = defineCollection({
   schema: footerNavigationZ,
 });
 
+// Site settings collection - singleton
+const siteSettingsCollection = defineCollection({
+  loader: async () => {
+    const siteSettings = await fetchSiteSettings();
+
+    if (!siteSettings) {
+      return [];
+    }
+
+    return [{
+      id: 'siteSettings',
+      ...siteSettings,
+    }];
+  },
+  schema: siteSettingsZ,
+});
+
 export const collections = {
   home: homeCollection,
   pages: pagesCollection,
   posts: postsCollection,
   mainNavigation: mainNavigationCollection,
   footerNavigation: footerNavigationCollection,
+  siteSettings: siteSettingsCollection,
   ...topicCollections,
 };
 

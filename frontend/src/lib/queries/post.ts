@@ -64,16 +64,13 @@ const relatedPosts = `
 `;
 
 const seoFields = `
-  metaTitle,
-  metaDescription,
+  seoTitle,
+  seoDescription,
   noIndex,
-  ogTitle,
-  ogDescription,
-  ${image.replace("image", "ogImage")},
-  twitterCard,
-  twitterTitle,
-  twitterDescription,
-  ${image.replace("image", "twitterImage")}
+  socialTitle,
+  socialDescription,
+  ${image.replace("image", "socialImage")},
+  socialImageAlt
 `;
 
 // Fetch single post by slug with all data

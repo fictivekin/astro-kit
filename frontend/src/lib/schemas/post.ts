@@ -58,16 +58,13 @@ export const postZ = z.object({
   showTOC: z.boolean().optional().nullable(),
   showReadingTime: z.boolean().optional().nullable(),
   // SEO fields
-  metaTitle: z.string().optional().nullable(),
-  metaDescription: z.string().optional().nullable(),
+  seoTitle: z.string().optional().nullable(),
+  seoDescription: z.string().optional().nullable(),
   noIndex: z.boolean().optional().nullable(),
-  ogTitle: z.string().optional().nullable(),
-  ogDescription: z.string().optional().nullable(),
-  ogImage: imageAssetZ.optional().nullable(),
-  twitterCard: z.string().optional().nullable(),
-  twitterTitle: z.string().optional().nullable(),
-  twitterDescription: z.string().optional().nullable(),
-  twitterImage: imageAssetZ.optional().nullable(),
+  socialTitle: z.string().optional().nullable(),
+  socialDescription: z.string().optional().nullable(),
+  socialImage: imageAssetZ.optional().nullable(),
+  socialImageAlt: z.string().optional().nullable(),
 });
 
 // Export TypeScript types inferred from schemas

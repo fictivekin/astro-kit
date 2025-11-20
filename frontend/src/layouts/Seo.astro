@@ -1,0 +1,107 @@
+---
+import { getCollection } from "astro:content";
+import type { SiteSettings } from "@/lib/schemas/siteSettings";
+
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  noIndex?: boolean;
+  image?: string;
+  imageAlt?: string;
+  ogType?: string;
+}
+
+const {
+  title: pageTitle,
+  description: pageDescription,
+  keywords: pageKeywords,
+  noIndex: pageNoIndex,
+  image: pageImage,
+  imageAlt: pageImageAlt,
+  ogType = "website",
+} = Astro.props;
+
+// Fetch site settings from content collection
+const siteSettingsEntries = await getCollection("siteSettings");
+const siteSettings: SiteSettings | undefined = siteSettingsEntries[0]?.data;
+
+// Merge page-specific with site defaults
+const title =
+  pageTitle || siteSettings?.seoTitle || siteSettings?.title || "Astro Site";
+const description = pageDescription || siteSettings?.seoDescription || "";
+const keywords = pageKeywords || siteSettings?.seoKeywords || [];
+const noIndex = pageNoIndex ?? siteSettings?.noIndex ?? false;
+
+// Social/OG defaults
+const socialTitle =
+  pageTitle ||
+  siteSettings?.socialTitle ||
+  siteSettings?.seoTitle ||
+  siteSettings?.title ||
+  title;
+const socialDescription =
+  pageDescription ||
+  siteSettings?.socialDescription ||
+  siteSettings?.seoDescription ||
+  description;
+const socialImage = pageImage || siteSettings?.socialImage?.asset?.url;
+const socialImageAlt = pageImageAlt || siteSettings?.socialImageAlt || "";
+
+// Canonical URL
+const canonicalUrl = new URL(
+  Astro.url.pathname,
+  Astro.site || Astro.url.origin
+).toString();
+
+// Analytics
+const facebookAppId = siteSettings?.facebookAppId;
+const twitterHandle = siteSettings?.twitter;
+---
+
+<!-- Basic Meta Tags -->
+<title>{title}</title>
+<meta name="description" content={description} />
+{keywords.length > 0 && <meta name="keywords" content={keywords.join(", ")} />}
+<link rel="canonical" href={canonicalUrl} />
+{noIndex && <meta name="robots" content="noindex" />}
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:title" content={socialTitle} />
+{
+  socialDescription && (
+    <meta property="og:description" content={socialDescription} />
+  )
+}
+{
+  siteSettings?.title && (
+    <meta property="og:site_name" content={siteSettings.title} />
+  )
+}
+{
+  socialImage && (
+    <meta
+      property="og:image"
+      content={`${socialImage}?w=1200&h=628&fit=crop&q=80&fm=jpg`}
+    />
+  )
+}
+{facebookAppId && <meta property="fb:app_id" content={facebookAppId} />}
+
+<!-- Twitter -->
+{
+  socialImage && socialImageAlt && (
+    <>
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:image:alt" content={socialImageAlt} />
+    </>
+  )
+}
+{twitterHandle && <meta name="twitter:site" content={`@${twitterHandle}`} />}
+
+<!-- Favicon -->
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" href="/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
