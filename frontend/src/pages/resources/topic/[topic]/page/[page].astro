@@ -6,6 +6,8 @@ import { sanityClient } from "@/lib/sanity";
 import { getCollection } from "astro:content";
 import { POSTS_PER_PAGE } from "@/lib/constants";
 
+export const prerender = true;
+
 // Get all topics and generate paths for all pages
 export async function getStaticPaths() {
   const topics = await sanityClient.fetch<

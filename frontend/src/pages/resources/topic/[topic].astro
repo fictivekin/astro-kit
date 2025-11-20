@@ -6,6 +6,8 @@ import { sanityClient } from "@/lib/sanity";
 import { getCollection } from "astro:content";
 import { POSTS_PER_PAGE } from "@/lib/constants";
 
+export const prerender = true;
+
 const currentPage = 1;
 
 // Get all topics for static generation
