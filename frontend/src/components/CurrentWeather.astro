@@ -1,0 +1,126 @@
+---
+// Fetch weather data from wttr.in API
+// Using format=j1 for JSON output
+const response = await fetch("https://wttr.in/?format=j1");
+const data = await response.json();
+
+// Extract current weather information
+const currentCondition = data.current_condition[0];
+const temperature = currentCondition.temp_C;
+const temperatureF = currentCondition.temp_F;
+const weatherDesc = currentCondition.weatherDesc[0].value;
+const feelsLikeC = currentCondition.FeelsLikeC;
+const feelsLikeF = currentCondition.FeelsLikeF;
+const humidity = currentCondition.humidity;
+const windSpeed = currentCondition.windspeedKmph;
+
+// Get location info
+const nearestArea = data.nearest_area[0];
+const location = `${nearestArea.areaName[0].value}, ${nearestArea.country[0].value}`;
+---
+
+<current-weather>
+  <div class="weather-container">
+    <h2 class="weather-title">Current Weather</h2>
+    <div class="weather-location">{location}</div>
+    <div class="weather-main">
+      <div class="weather-temp">{temperature}°C / {temperatureF}°F</div>
+      <div class="weather-condition">{weatherDesc}</div>
+    </div>
+    <div class="weather-details">
+      <div class="weather-detail">
+        <span class="detail-label">Feels like:</span>
+        <span class="detail-value">{feelsLikeC}°C / {feelsLikeF}°F</span>
+      </div>
+      <div class="weather-detail">
+        <span class="detail-label">Humidity:</span>
+        <span class="detail-value">{humidity}%</span>
+      </div>
+      <div class="weather-detail">
+        <span class="detail-label">Wind speed:</span>
+        <span class="detail-value">{windSpeed} km/h</span>
+      </div>
+    </div>
+  </div>
+</current-weather>
+
+<style>
+  current-weather {
+    display: block;
+  }
+
+  .weather-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .weather-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .weather-location {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+  }
+
+  .weather-main {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .weather-temp {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .weather-condition {
+    font-size: 1.25rem;
+    text-transform: capitalize;
+    opacity: 0.95;
+  }
+
+  .weather-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .weather-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+  }
+
+  .detail-label {
+    opacity: 0.9;
+  }
+
+  .detail-value {
+    font-weight: 600;
+  }
+
+  @media (max-width: 600px) {
+    .weather-container {
+      padding: 1.5rem;
+    }
+
+    .weather-temp {
+      font-size: 2rem;
+    }
+
+    .weather-condition {
+      font-size: 1.1rem;
+    }
+  }
+</style>

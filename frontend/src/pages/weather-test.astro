@@ -1,0 +1,249 @@
+---
+import CurrentWeather from "@/components/CurrentWeather.astro";
+import WeatherFallback from "@/components/WeatherFallback.astro";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Server Islands Test - Weather API</title>
+    <meta
+      name="description"
+      content="Testing Astro Server Islands with wttr.in weather API"
+    />
+  </head>
+  <body>
+    <main class="container">
+      <header class="page-header">
+        <h1>Astro Server Islands Demo</h1>
+        <p class="subtitle">
+          Testing server-side rendering with the wttr.in weather API
+        </p>
+      </header>
+
+      <section class="info-section">
+        <h2>What's happening here?</h2>
+        <div class="info-content">
+          <p>
+            This page demonstrates <strong>Astro Server Islands</strong> - a feature
+            that allows you to defer rendering of specific components until their
+            data is available, without blocking the rest of the page.
+          </p>
+          <ul>
+            <li>
+              <strong>Initial Load:</strong> You'll see a loading spinner (fallback
+              content) while the weather component fetches data from the wttr.in
+              API.
+            </li>
+            <li>
+              <strong>Server-Side Rendering:</strong> The weather data is fetched
+              on the server, not in the browser, keeping API keys secure if needed.
+            </li>
+            <li>
+              <strong>Progressive Loading:</strong> The page renders immediately
+              with the fallback, then the weather island loads independently.
+            </li>
+            <li>
+              <strong>Custom Element:</strong> The weather component is wrapped in
+              a
+              <code>&lt;current-weather&gt;</code> custom element for semantic HTML.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="weather-section">
+        <CurrentWeather server:defer>
+          <WeatherFallback slot="fallback" />
+        </CurrentWeather>
+      </section>
+
+      <section class="technical-section">
+        <h2>Technical Details</h2>
+        <div class="tech-content">
+          <div class="tech-item">
+            <h3>Server Islands Directive</h3>
+            <p>
+              The <code>server:defer</code> directive tells Astro to render this
+              component separately after the initial page load.
+            </p>
+          </div>
+          <div class="tech-item">
+            <h3>Fallback Content</h3>
+            <p>
+              The <code>slot="fallback"</code> provides immediate visual feedback
+              while the actual content loads.
+            </p>
+          </div>
+          <div class="tech-item">
+            <h3>API Source</h3>
+            <p>
+              Weather data comes from <a
+                href="https://wttr.in"
+                target="_blank"
+                rel="noopener">wttr.in</a
+              >, a free weather API that works internationally without requiring
+              an API key.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(to bottom, #f7f9fc 0%, #e9ecef 100%);
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .page-header h1 {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 1.125rem;
+    color: #666;
+    margin-top: 0.5rem;
+  }
+
+  .info-section,
+  .technical-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .info-section h2,
+  .technical-section h2 {
+    color: #667eea;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .info-content p {
+    margin-bottom: 1rem;
+    color: #555;
+  }
+
+  .info-content ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .info-content li {
+    padding: 0.75rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #555;
+  }
+
+  .info-content li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #667eea;
+    font-weight: bold;
+  }
+
+  .info-content strong {
+    color: #333;
+  }
+
+  code {
+    background: #f4f4f4;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: "Monaco", "Courier New", monospace;
+    font-size: 0.9em;
+    color: #764ba2;
+  }
+
+  .weather-section {
+    margin: 3rem 0;
+  }
+
+  .tech-content {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .tech-item h3 {
+    color: #333;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .tech-item p {
+    color: #555;
+  }
+
+  .tech-item a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .tech-item a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding: 1rem;
+    }
+
+    .page-header h1 {
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+    }
+
+    .info-section,
+    .technical-section {
+      padding: 1.5rem;
+    }
+
+    .info-section h2,
+    .technical-section h2 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
