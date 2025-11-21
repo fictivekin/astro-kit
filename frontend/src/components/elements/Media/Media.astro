@@ -23,6 +23,7 @@ const { media, lazyLoad = true } = Astro.props;
         height={media.image.asset.metadata?.dimensions?.height ?? 800}
         class="media__image"
         loading={lazyLoad ? "lazy" : "eager"}
+        fetchpriority={lazyLoad ? "low" : "high"}
       />
     </div>
   )
