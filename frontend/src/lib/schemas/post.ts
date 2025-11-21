@@ -1,10 +1,10 @@
-import { z } from 'astro:content';
-import { slugZ, portableTextZ, imageAssetZ } from './page';
+import { z } from "astro:content";
+import { slugZ, portableTextZ, imageAssetZ } from "./page";
 
 // People/Author schema
 export const peopleZ = z.object({
   _id: z.string(),
-  _type: z.literal('people'),
+  _type: z.literal("people"),
   name: z.string(),
   slug: slugZ,
   position: z.string().optional().nullable(),
@@ -16,7 +16,7 @@ export const peopleZ = z.object({
 // Topic reference schema
 export const topicZ = z.object({
   _id: z.string(),
-  _type: z.literal('topic'),
+  _type: z.literal("topic"),
   title: z.string(),
   slug: slugZ,
 });
@@ -24,7 +24,7 @@ export const topicZ = z.object({
 // Format reference schema
 export const formatZ = z.object({
   _id: z.string(),
-  _type: z.literal('format'),
+  _type: z.literal("format"),
   title: z.string(),
   slug: slugZ,
 });
@@ -32,7 +32,7 @@ export const formatZ = z.object({
 // Basic post reference (for relatedPosts)
 const postRefZ = z.object({
   _id: z.string(),
-  _type: z.literal('post'),
+  _type: z.literal("post"),
   title: z.string(),
   slug: z.string(),
   publishedOn: z.string(),
@@ -43,7 +43,7 @@ const postRefZ = z.object({
 // Full post schema
 export const postZ = z.object({
   _id: z.string(),
-  _type: z.literal('post'),
+  _type: z.literal("post"),
   title: z.string(),
   slug: z.string(),
   publishedOn: z.string(),
@@ -60,6 +60,7 @@ export const postZ = z.object({
   // SEO fields
   seoTitle: z.string().optional().nullable(),
   seoDescription: z.string().optional().nullable(),
+  seoKeywords: z.array(z.string()).optional().nullable(),
   noIndex: z.boolean().optional().nullable(),
   socialTitle: z.string().optional().nullable(),
   socialDescription: z.string().optional().nullable(),
@@ -73,4 +74,3 @@ export type PostRef = z.infer<typeof postRefZ>;
 export type People = z.infer<typeof peopleZ>;
 export type Topic = z.infer<typeof topicZ>;
 export type Format = z.infer<typeof formatZ>;
-

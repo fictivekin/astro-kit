@@ -1,6 +1,6 @@
 import sanityClient from "@/lib/sanity";
 import { pageZ } from "@/lib/schemas/page";
-import { linkFields, media } from "@/lib/queries/fragments";
+import { linkFields, media, seoFields } from "@/lib/queries/fragments";
 
 // Reusable GROQ fragments
 const cta = `
@@ -97,20 +97,7 @@ export async function fetchHomepage() {
       "sections": sections[] {
         ${sectionProjections}
       },
-      seoTitle,
-      seoDescription,
-      seoKeywords,
-      noIndex,
-      socialTitle,
-      socialDescription,
-      socialImage {
-        asset-> {
-          _id,
-          url
-        },
-        altText
-      },
-      socialImageAlt
+      ${seoFields}
     }`
   );
 
@@ -131,20 +118,7 @@ export async function fetchPageBySlug(slug: string) {
       "sections": sections[] {
         ${sectionProjections}
       },
-      seoTitle,
-      seoDescription,
-      seoKeywords,
-      noIndex,
-      socialTitle,
-      socialDescription,
-      socialImage {
-        asset-> {
-          _id,
-          url
-        },
-        altText
-      },
-      socialImageAlt
+      ${seoFields}
     }`,
     { slug }
   );

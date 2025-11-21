@@ -57,3 +57,27 @@ export const linkFields = `
   },
   openInNewTab
 `;
+
+// SEO and social media fields
+export const seoFields = `
+  seoTitle,
+  seoDescription,
+  seoKeywords,
+  noIndex,
+  socialTitle,
+  socialDescription,
+  socialImage {
+    asset-> {
+      _id,
+      url,
+      metadata {
+        dimensions {
+          width,
+          height
+        }
+      }
+    },
+    altText
+  },
+  socialImageAlt
+`;

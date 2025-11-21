@@ -1,6 +1,6 @@
 import sanityClient from "@/lib/sanity";
 import { postZ } from "@/lib/schemas/post";
-import { imageFields } from "@/lib/queries/fragments";
+import { imageFields, seoFields } from "@/lib/queries/fragments";
 
 // Reusable GROQ fragments for post data
 
@@ -49,18 +49,6 @@ const relatedPosts = `
       ${imageFields}
     }
   }
-`;
-
-const seoFields = `
-  seoTitle,
-  seoDescription,
-  noIndex,
-  socialTitle,
-  socialDescription,
-  socialImage {
-    ${imageFields}
-  },
-  socialImageAlt
 `;
 
 // Fetch single post by slug with all data
