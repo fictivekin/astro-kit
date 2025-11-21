@@ -171,7 +171,14 @@ export const pageZ = z.object({
   title: z.string().optional().nullable(),
   slug: z.string(),
   sections: z.array(sectionZ).optional().nullable(),
+  seoTitle: z.string().optional().nullable(),
+  seoDescription: z.string().optional().nullable(),
+  seoKeywords: z.array(z.string()).optional().nullable(),
   noIndex: z.boolean().optional().nullable(),
+  socialTitle: z.string().optional().nullable(),
+  socialDescription: z.string().optional().nullable(),
+  socialImage: imageAssetZ.optional().nullable(),
+  socialImageAlt: z.string().optional().nullable(),
 });
 
 // Export TypeScript types inferred from schemas

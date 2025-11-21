@@ -1,38 +1,33 @@
 // Reusable GROQ fragments for queries
 
 // Image asset with dimensions and alt text
-export const image = `
-  image {
-    asset->{
-      _id,
-      url,
-      metadata {
-        dimensions {
-          width,
-          height
-        }
+export const imageFields = `
+  asset->{
+    _id,
+    url,
+    metadata {
+      dimensions {
+        width,
+        height
       }
-    },
-    altText
-  }
-`;
-
-// Video asset
-export const video = `
-  video {
-    asset->{
-      _id,
-      url
     }
-  }
+  },
+  altText
 `;
 
 // Full media object with image and video
 export const media = `
   media {
     type,
-    ${image},
-    ${video}
+    image {
+      ${imageFields}
+    },
+    video {
+      asset->{
+        _id,
+        url
+      }
+    }
   }
 `;
 
@@ -62,4 +57,3 @@ export const linkFields = `
   },
   openInNewTab
 `;
-

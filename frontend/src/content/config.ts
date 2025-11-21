@@ -1,13 +1,16 @@
-import { defineCollection } from 'astro:content';
-import { fetchHomepage, fetchPageBySlug } from '@/lib/queries/page';
-import { fetchAllPosts, fetchPostsByTopic } from '@/lib/queries/post';
-import { fetchMainNavigation, fetchFooterNavigation } from '@/lib/queries/navigation';
-import { fetchSiteSettings } from '@/lib/queries/siteSettings';
-import { sanityClient } from '@/lib/sanity';
-import { pageZ } from '@/lib/schemas/page';
-import { postZ } from '@/lib/schemas/post';
-import { mainNavigationZ, footerNavigationZ } from '@/lib/schemas/navigation';
-import { siteSettingsZ } from '@/lib/schemas/siteSettings';
+import { defineCollection } from "astro:content";
+import { fetchHomepage, fetchPageBySlug } from "@/lib/queries/page";
+import { fetchAllPosts, fetchPostsByTopic } from "@/lib/queries/post";
+import {
+  fetchMainNavigation,
+  fetchFooterNavigation,
+} from "@/lib/queries/navigation";
+import { fetchSiteSettings } from "@/lib/queries/siteSettings";
+import sanityClient from "@/lib/sanity";
+import { pageZ } from "@/lib/schemas/page";
+import { postZ } from "@/lib/schemas/post";
+import { mainNavigationZ, footerNavigationZ } from "@/lib/schemas/navigation";
+import { siteSettingsZ } from "@/lib/schemas/siteSettings";
 
 // Home collection - single entry for homepage
 const homeCollection = defineCollection({
@@ -18,10 +21,12 @@ const homeCollection = defineCollection({
       return [];
     }
 
-    return [{
-      id: homepage.slug,
-      ...homepage,
-    }];
+    return [
+      {
+        id: homepage.slug,
+        ...homepage,
+      },
+    ];
   },
   schema: pageZ,
 });
@@ -51,7 +56,7 @@ const pagesCollection = defineCollection({
       })
     );
 
-    return pageData.filter(page => page !== null && page !== undefined);
+    return pageData.filter((page) => page !== null && page !== undefined);
   },
   schema: pageZ,
 });
@@ -65,7 +70,7 @@ const postsCollection = defineCollection({
       return [];
     }
 
-    return posts.map(post => ({
+    return posts.map((post) => ({
       id: post.slug,
       ...post,
     }));
@@ -74,7 +79,9 @@ const postsCollection = defineCollection({
 });
 
 // Fetch all topics and create collections dynamically
-const topics = await sanityClient.fetch<Array<{ slug: { current: string }; title: string }>>(
+const topics = await sanityClient.fetch<
+  Array<{ slug: { current: string }; title: string }>
+>(
   `*[_type == "topic"] {
     slug,
     title
@@ -82,7 +89,10 @@ const topics = await sanityClient.fetch<Array<{ slug: { current: string }; title
 );
 
 // Create a collection for each topic
-const topicCollections: Record<string, ReturnType<typeof defineCollection>> = {};
+const topicCollections: Record<
+  string,
+  ReturnType<typeof defineCollection>
+> = {};
 
 for (const topic of topics) {
   const topicSlug = topic.slug.current;
@@ -95,7 +105,7 @@ for (const topic of topics) {
         return [];
       }
 
-      return posts.map(post => ({
+      return posts.map((post) => ({
         id: post.slug,
         ...post,
       }));
@@ -113,10 +123,12 @@ const mainNavigationCollection = defineCollection({
       return [];
     }
 
-    return [{
-      id: 'mainNavigation',
-      ...mainNavigation,
-    }];
+    return [
+      {
+        id: "mainNavigation",
+        ...mainNavigation,
+      },
+    ];
   },
   schema: mainNavigationZ,
 });
@@ -130,10 +142,12 @@ const footerNavigationCollection = defineCollection({
       return [];
     }
 
-    return [{
-      id: 'footerNavigation',
-      ...footerNavigation,
-    }];
+    return [
+      {
+        id: "footerNavigation",
+        ...footerNavigation,
+      },
+    ];
   },
   schema: footerNavigationZ,
 });
@@ -147,10 +161,12 @@ const siteSettingsCollection = defineCollection({
       return [];
     }
 
-    return [{
-      id: 'siteSettings',
-      ...siteSettings,
-    }];
+    return [
+      {
+        id: "siteSettings",
+        ...siteSettings,
+      },
+    ];
   },
   schema: siteSettingsZ,
 });
@@ -164,4 +180,3 @@ export const collections = {
   siteSettings: siteSettingsCollection,
   ...topicCollections,
 };
-

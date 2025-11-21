@@ -4,8 +4,16 @@ import SectionRenderer from "@/components/SectionRenderer.astro";
 import { getEntry } from "astro:content";
 
 const homepage = await getEntry("home", "homepage");
+const page = homepage?.data;
 ---
 
-<Layout>
-  <SectionRenderer sections={homepage?.data?.sections} />
+<Layout
+  title={page?.seoTitle || page?.title || undefined}
+  description={page?.seoDescription || undefined}
+  keywords={page?.seoKeywords || undefined}
+  noIndex={page?.noIndex ?? undefined}
+  image={page?.socialImage?.asset?.url || undefined}
+  imageAlt={page?.socialImageAlt || page?.socialImage?.altText || undefined}
+>
+  <SectionRenderer sections={page?.sections} />
 </Layout>

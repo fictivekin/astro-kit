@@ -1,4 +1,4 @@
-import { sanityClient } from "@/lib/sanity";
+import sanityClient from "@/lib/sanity";
 import { mainNavigationZ, footerNavigationZ } from "@/lib/schemas/navigation";
 import { linkFields } from "@/lib/queries/fragments";
 

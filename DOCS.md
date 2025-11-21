@@ -4,25 +4,76 @@
 
 This project uses Astro Content Collections with custom loaders to fetch data from Sanity CMS at build time. The architecture provides type-safe access to CMS data using Zod schemas that match the exact structure of GROQ queries, following patterns from [Simeon Griggs' article on type-safe GROQ queries](https://www.simeongriggs.dev/type-safe-groq-queries-for-sanity-data-with-zod).
 
+## Environment Variables
+
+### Frontend (Astro)
+
+Create a `.env` file in the `frontend/` directory with the following variables:
+
+```env
+# Sanity API Token for reading draft content in preview mode
+# Get this from: https://sanity.io/manage/project/{projectId}/api/tokens
+# Permissions required: Viewer role or custom role with read access
+# IMPORTANT: Use a project token, not a personal token
+SANITY_API_READ_TOKEN=your_sanity_token_here
+
+# Preview secret - shared between Astro frontend and Sanity Studio
+# Generate a random string (e.g., use a password generator)
+# This must match SANITY_STUDIO_PREVIEW_SECRET in the studio
+SANITY_PREVIEW_SECRET=your_random_secret_here
+```
+
+### Studio (Sanity)
+
+The Sanity Studio needs environment variables to connect to the Astro preview. Create a `.env` file in the `studio/` directory:
+
+```env
+# URL of the Astro frontend for preview functionality
+# Development: http://localhost:4321 (or your Astro dev server port)
+# Production: https://your-production-domain.com
+SANITY_STUDIO_PREVIEW_URL=http://localhost:4321
+
+# Preview secret - must match SANITY_PREVIEW_SECRET in the frontend
+# This is used to secure the preview endpoint
+SANITY_STUDIO_PREVIEW_SECRET=your_random_secret_here
+```
+
+### Setting Up Preview
+
+1. **Generate a preview secret**: Use a random string generator to create a secure secret
+2. **Add environment variables**: Add the variables to both `frontend/.env` and `studio/.env`
+3. **Get Sanity API Token**:
+   - Go to https://sanity.io/manage/project/{projectId}/api/tokens
+   - Create a new **project token** (not personal token) with Viewer permissions
+   - Copy the token to `SANITY_API_READ_TOKEN` in `frontend/.env`
+4. **Start both servers**:
+   - Frontend: `cd frontend && npm run dev`
+   - Studio: `cd studio && npm run dev`
+5. **Test preview**: Open a document in Sanity Studio and click the "Preview" tab
+
 ## Key Files
 
 ### Configuration
+
 - `frontend/src/content/config.ts` - Defines collections and custom loaders
 - `frontend/astro.config.mjs` - Astro configuration
 
 ### Data Layer
+
 - `frontend/src/lib/schemas.ts` - **Zod schemas** matching GROQ query structure
 - `frontend/src/lib/queries.ts` - Sanity GROQ queries with runtime validation
 - `frontend/src/lib/sanity.ts` - Sanity client configuration
 - `frontend/src/lib/componentMap.ts` - Maps section types to Astro components
 
 ### Pages
+
 - `frontend/src/pages/index.astro` - Homepage using `home` collection
 - `frontend/src/pages/[slug].astro` - Dynamic pages using `pages` collection
 
 ## Collections
 
 ### Home Collection
+
 - **Purpose**: Single entry for the homepage
 - **Loader**: Calls `fetchHomepage()` to retrieve homepage data from Sanity
 - **ID**: Uses the `slug` field from the data (which is "homepage")
@@ -30,6 +81,7 @@ This project uses Astro Content Collections with custom loaders to fetch data fr
 - **Data**: Homepage with sections array
 
 ### Pages Collection
+
 - **Purpose**: All site pages with slugs
 - **Loader**:
   1. Queries Sanity for all page slugs
@@ -43,19 +95,19 @@ This project uses Astro Content Collections with custom loaders to fetch data fr
 
 ```typescript
 // In .astro files
-import { getEntry, getCollection } from 'astro:content';
+import { getEntry, getCollection } from "astro:content";
 
 // Get homepage (id is the slug "homepage")
-const homepage = await getEntry('home', 'homepage');
+const homepage = await getEntry("home", "homepage");
 const sections = homepage?.data?.sections;
 
 // Get specific page (id is the page's slug)
-const page = await getEntry('pages', 'about');
+const page = await getEntry("pages", "about");
 const sections = page?.data?.sections;
 
 // Get all pages - page.id is the slug
-const allPages = await getCollection('pages');
-allPages.map(page => {
+const allPages = await getCollection("pages");
+allPages.map((page) => {
   console.log(page.id); // "about", "contact", etc.
   console.log(page.data.slug); // same as page.id
 });
@@ -66,6 +118,7 @@ allPages.map(page => {
 Sections are rendered using the component map pattern:
 
 **Available Section Types:**
+
 - `ctaBanner` → `CtaBanner.astro`
 - `feature` → `Feature.astro`
 - `headline` → `Headline.astro`
@@ -73,6 +126,7 @@ Sections are rendered using the component map pattern:
 - `multicard` → `Multicard.astro`
 
 **Rendering Pattern:**
+
 ```typescript
 sections?.map((section) => {
   const Component = componentMap[section._type];
@@ -94,17 +148,20 @@ The content schemas are defined in `frontend/src/lib/schemas.ts` using Zod with 
 ### Schema Structure
 
 **Base Schemas:**
+
 - `assetZ` - Asset references (`_id`, `url`)
 - `portableTextZ` - Portable Text with `.passthrough()` for flexible blocks
 - `mediaZ` - Media objects (type, image, video)
 - `ctaZ` - Call-to-action objects
 
 **Section Schemas:**
+
 - `ctaBannerZ`, `featureZ`, `headlineZ`, `heroZ`, `multicardZ`
 - Each uses `z.literal('typeName')` for `_type` field
 - Combined in `sectionZ` discriminated union
 
 **Page Schema:**
+
 - `pageZ` - Top-level with `_id`, `_type`, `title`, `slug`, `sections`, `noIndex`
 
 ### Runtime Validation
@@ -130,6 +187,7 @@ export type CtaBanner = z.infer<typeof ctaBannerZ>;
 ```
 
 This approach:
+
 - Validates exact fields returned by GROQ
 - Catches schema/query mismatches at build time
 - Provides accurate TypeScript types
@@ -149,4 +207,3 @@ This approach:
 3. Add section fields to `sectionFields` in `queries.ts`
 4. Map component in `componentMap.ts`
 5. Schema automatically handles new types via `passthrough()`
-

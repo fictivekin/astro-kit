@@ -13,6 +13,7 @@ import {
   WarningOutlineIcon,
 } from '@sanity/icons'
 import type {StructureBuilder, StructureResolver} from 'sanity/structure'
+import {viewConfiguration} from './previewPane'
 
 /**
  * Structure builder is useful whenever you want to control how documents are grouped and
@@ -81,7 +82,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
               S.listItem()
                 .title('404 Page')
                 .icon(WarningOutlineIcon)
-                .child(S.document().schemaType('page').documentId('notFoundPage')),
+                .child(viewConfiguration(S, 'page', 'notFoundPage')),
               S.listItem()
                 .title('Redirects')
                 .icon(RedoIcon)
@@ -97,7 +98,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
       S.listItem()
         .title('Home')
         .icon(HomeIcon)
-        .child(S.document().schemaType('page').documentId('homepage')),
+        .child(viewConfiguration(S, 'page', 'homepage')),
       S.listItem()
         .title('Pages')
         .icon(BookIcon)
@@ -133,7 +134,9 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
         .child(
           S.documentList()
             .title('Linked Sections')
-            .filter('_type in ["accordion", "banner", "carousel", "ctaBanner", "divider", "feature", "featureStack", "headline", "hubspotForm", "hero", "secondaryHero", "list", "logoCloud", "multicard", "postList", "quote", "team", "testimonials", "textBlock", "video"] && count(*[references(^._id)]) > 0')
+            .filter(
+              '_type in ["accordion", "banner", "carousel", "ctaBanner", "divider", "feature", "featureStack", "headline", "hubspotForm", "hero", "secondaryHero", "list", "logoCloud", "multicard", "postList", "quote", "team", "testimonials", "textBlock", "video"] && count(*[references(^._id)]) > 0',
+            )
             .defaultOrdering([{field: '_type', direction: 'asc'}]),
         ),
 

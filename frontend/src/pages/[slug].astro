@@ -16,14 +16,23 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 
-const page = await getEntry("pages", slug);
+const pageEntry = await getEntry("pages", slug);
 
 // Return 404 if page not found
-if (!page) {
+if (!pageEntry) {
   return Astro.redirect("/404");
 }
+
+const page = pageEntry.data;
 ---
 
-<Layout>
-  <SectionRenderer sections={page?.data?.sections} />
+<Layout
+  title={page?.seoTitle || page?.title || undefined}
+  description={page?.seoDescription || undefined}
+  keywords={page?.seoKeywords || undefined}
+  noIndex={page?.noIndex ?? undefined}
+  image={page?.socialImage?.asset?.url || undefined}
+  imageAlt={page?.socialImageAlt || page?.socialImage?.altText || undefined}
+>
+  <SectionRenderer sections={page?.sections} />
 </Layout>

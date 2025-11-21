@@ -1,24 +1,8 @@
-import { sanityClient } from "@/lib/sanity";
+import sanityClient from "@/lib/sanity";
 import { postZ } from "@/lib/schemas/post";
-import { image } from "@/lib/queries/fragments";
+import { imageFields } from "@/lib/queries/fragments";
 
 // Reusable GROQ fragments for post data
-
-const heroImage = `
-  hero {
-    asset->{
-      _id,
-      url,
-      metadata {
-        dimensions {
-          width,
-          height
-        }
-      }
-    },
-    altText
-  }
-`;
 
 const author = `
   author[]->{
@@ -28,7 +12,9 @@ const author = `
     slug,
     position,
     company,
-    ${image.replace("image", "photo")},
+    photo {
+      ${imageFields}
+    },
     bio
   }
 `;
@@ -59,7 +45,9 @@ const relatedPosts = `
     "slug": slug.current,
     publishedOn,
     thumbnailText,
-    ${heroImage}
+    heroImage {
+      ${imageFields}
+    }
   }
 `;
 
@@ -69,7 +57,9 @@ const seoFields = `
   noIndex,
   socialTitle,
   socialDescription,
-  ${image.replace("image", "socialImage")},
+  socialImage {
+    ${imageFields}
+  },
   socialImageAlt
 `;
 
@@ -84,7 +74,9 @@ export async function fetchPostBySlug(slug: string) {
       publishedOn,
       thumbnailText,
       "body": coalesce(body, []),
-      ${heroImage},
+      heroImage {
+        ${imageFields}
+      },
       ${author},
       ${format},
       ${topics},
@@ -114,7 +106,9 @@ export async function fetchAllPosts() {
       "slug": slug.current,
       publishedOn,
       thumbnailText,
-      ${heroImage},
+      heroImage {
+        ${imageFields}
+      },
       ${author},
       ${format},
       ${topics},
@@ -144,7 +138,9 @@ export async function fetchPostsByTopic(topicSlug: string) {
       "slug": slug.current,
       publishedOn,
       thumbnailText,
-      ${heroImage},
+      heroImage {
+        ${imageFields}
+      },
       ${author},
       ${format},
       ${topics},
@@ -173,7 +169,9 @@ export async function fetchPostsByFormat(formatSlug: string) {
       "slug": slug.current,
       publishedOn,
       thumbnailText,
-      ${heroImage},
+      heroImage {
+        ${imageFields}
+      },
       ${author},
       ${format},
       ${topics},

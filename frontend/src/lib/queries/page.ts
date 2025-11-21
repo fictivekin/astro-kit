@@ -1,4 +1,4 @@
-import { sanityClient } from "@/lib/sanity";
+import sanityClient from "@/lib/sanity";
 import { pageZ } from "@/lib/schemas/page";
 import { linkFields, media } from "@/lib/queries/fragments";
 
@@ -84,19 +84,33 @@ const sectionProjections = `
 
 export async function fetchHomepage() {
   const result = await sanityClient.fetch(
-    `*[_type == "page" && _id == "homepage"][0] {
+    `*[_type == "page" && (_id == "homepage" || _id == "drafts.homepage")][0] {
       _id,
       _type,
       title,
       "slug": select(
         _id == "homepage" => "homepage",
+        _id == "drafts.homepage" => "homepage",
         _id == "notFoundPage" => "404",
         slug.current
       ),
       "sections": sections[] {
         ${sectionProjections}
       },
-      noIndex
+      seoTitle,
+      seoDescription,
+      seoKeywords,
+      noIndex,
+      socialTitle,
+      socialDescription,
+      socialImage {
+        asset-> {
+          _id,
+          url
+        },
+        altText
+      },
+      socialImageAlt
     }`
   );
 
@@ -117,7 +131,20 @@ export async function fetchPageBySlug(slug: string) {
       "sections": sections[] {
         ${sectionProjections}
       },
-      noIndex
+      seoTitle,
+      seoDescription,
+      seoKeywords,
+      noIndex,
+      socialTitle,
+      socialDescription,
+      socialImage {
+        asset-> {
+          _id,
+          url
+        },
+        altText
+      },
+      socialImageAlt
     }`,
     { slug }
   );

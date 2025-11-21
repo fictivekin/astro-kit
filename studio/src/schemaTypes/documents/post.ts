@@ -54,6 +54,7 @@ export default defineType({
          * NOTE: Not in ReferenceOptions TS types, but supported by Studio's reference input.
          * See https://github.com/sanity-io/sanity/issues/2295
          */
+        // @ts-ignore - sort is supported but not in TS types
         sort: [{field: 'title', direction: 'asc'}],
       },
       group: 'content',

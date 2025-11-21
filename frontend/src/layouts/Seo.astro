@@ -27,19 +27,18 @@ const siteSettingsEntries = await getCollection("siteSettings");
 const siteSettings: SiteSettings | undefined = siteSettingsEntries[0]?.data;
 
 // Merge page-specific with site defaults
-const title =
-  pageTitle || siteSettings?.seoTitle || siteSettings?.title || "Astro Site";
+const siteTitle = siteSettings?.title;
+const title = pageTitle
+  ? `${pageTitle}${siteTitle ? ` | ${siteTitle}` : ""}`
+  : siteSettings?.seoTitle || siteTitle || "Astro Site";
 const description = pageDescription || siteSettings?.seoDescription || "";
 const keywords = pageKeywords || siteSettings?.seoKeywords || [];
 const noIndex = pageNoIndex ?? siteSettings?.noIndex ?? false;
 
 // Social/OG defaults
-const socialTitle =
-  pageTitle ||
-  siteSettings?.socialTitle ||
-  siteSettings?.seoTitle ||
-  siteSettings?.title ||
-  title;
+const socialTitle = pageTitle
+  ? `${pageTitle}${siteTitle ? ` | ${siteTitle}` : ""}`
+  : siteSettings?.socialTitle || siteSettings?.seoTitle || siteTitle || title;
 const socialDescription =
   pageDescription ||
   siteSettings?.socialDescription ||

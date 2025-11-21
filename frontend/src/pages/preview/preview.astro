@@ -1,0 +1,59 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SectionRenderer from "@/components/SectionRenderer.astro";
+import PostLayout from "@/components/PostLayout.astro";
+import { fetchPreviewContent } from "@/lib/queries/preview";
+import type { Page } from "@/lib/schemas/page";
+import type { Post } from "@/lib/schemas/post";
+
+// Disable prerendering for preview - must be SSR
+export const prerender = false;
+
+// Get query parameters
+const url = new URL(Astro.request.url);
+const secret = url.searchParams.get("secret");
+const slug = url.searchParams.get("slug");
+const type = url.searchParams.get("type");
+
+// Validate preview secret
+const expectedSecret = import.meta.env.SANITY_PREVIEW_SECRET;
+if (!expectedSecret || secret !== expectedSecret) {
+  return new Response("Unauthorized", { status: 401 });
+}
+
+// Validate required parameters
+if (!slug || !type) {
+  return new Response("Missing required parameters: slug and type", {
+    status: 400,
+  });
+}
+
+// Fetch preview content using preview client
+const content = await fetchPreviewContent(slug, type);
+
+// Return 404 if content not found
+if (!content) {
+  return new Response("Content not found", { status: 404 });
+}
+
+// Type guard for better type safety
+const isPage = type === "page" || type === "simplePage";
+const pageData = isPage ? (content as Page) : null;
+const postData = !isPage ? (content as Post) : null;
+---
+
+{
+  pageData && (
+    <Layout>
+      <SectionRenderer sections={pageData.sections} />
+    </Layout>
+  )
+}
+
+{
+  postData && (
+    <Layout>
+      <PostLayout postData={postData} />
+    </Layout>
+  )
+}

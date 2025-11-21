@@ -1,6 +1,6 @@
-import { sanityClient } from "@/lib/sanity";
+import sanityClient from "@/lib/sanity";
 import { siteSettingsZ } from "@/lib/schemas/siteSettings";
-import { image } from "@/lib/queries/fragments";
+import { imageFields } from "@/lib/queries/fragments";
 
 export async function fetchSiteSettings() {
   const result = await sanityClient.fetch(
@@ -15,7 +15,9 @@ export async function fetchSiteSettings() {
       noIndex,
       socialTitle,
       socialDescription,
-      ${image.replace("image", "socialImage")},
+      socialImage {
+        ${imageFields}
+      },
       socialImageAlt,
       twitter,
       googleTagManagerId,
@@ -30,4 +32,3 @@ export async function fetchSiteSettings() {
 
   return siteSettingsZ.parse(result);
 }
-
