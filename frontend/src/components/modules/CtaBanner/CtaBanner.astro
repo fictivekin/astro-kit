@@ -5,7 +5,7 @@ import Media from "@/components/elements/Media/Media.astro";
 import Cta from "@/components/elements/Cta/Cta.astro";
 import type { CtaBanner } from "@/lib/schemas/page";
 import type { SemanticLevel } from "@/lib/types";
-
+import Section from "@/components/elements/Section/Section.astro";
 interface Props {
   ctaBanner: CtaBanner;
   lazyLoad?: boolean;
@@ -25,8 +25,11 @@ const {
 } = ctaBanner;
 ---
 
-<section
-  class={`cta-banner cta-banner--${theme} cta-banner--align-${alignment}`}
+<Section
+  class:list={[
+    theme && `cta-banner--${theme}`,
+    alignment && `cta-banner--align-${alignment}`,
+  ]}
 >
   <div class="cta-banner__container">
     {
@@ -65,14 +68,9 @@ const {
       }
     </div>
   </div>
-</section>
+</Section>
 
 <style>
-  .cta-banner {
-    padding: 4rem 2rem;
-    width: 100%;
-  }
-
   .cta-banner--light {
     background-color: #f8f8f8;
     color: #333333;
@@ -170,10 +168,6 @@ const {
 
   /* Responsive styles */
   @media (max-width: 768px) {
-    .cta-banner {
-      padding: 3rem 1.5rem;
-    }
-
     .cta-banner__title :global(h2) {
       font-size: 2rem;
     }

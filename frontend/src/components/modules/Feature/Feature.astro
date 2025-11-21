@@ -6,6 +6,7 @@ import Cta from "@/components/elements/Cta/Cta.astro";
 import type { Feature } from "@/lib/schemas/page";
 import type { SemanticLevel } from "@/lib/types";
 import AstroHeart from "@/components/elements/AstroHeart/AstroHeart.astro";
+import Section from "@/components/elements/Section/Section.astro";
 
 interface Props {
   feature: Feature;
@@ -25,7 +26,12 @@ const {
 } = feature;
 ---
 
-<section class={`feature feature--${theme} feature--media-${mediaSide}`}>
+<Section
+  class:list={[
+    theme && `feature--${theme}`,
+    mediaSide && `feature--media-${mediaSide}`,
+  ]}
+>
   <div class="feature__container">
     <div class="feature__media">
       {media && <Media media={media} lazyLoad={lazyLoad} />}
@@ -59,14 +65,9 @@ const {
       <AstroHeart />
     </div>
   </div>
-</section>
+</Section>
 
 <style>
-  .feature {
-    padding: 4rem 2rem;
-    width: 100%;
-  }
-
   .feature--light {
     background-color: #ffffff;
     color: #333333;

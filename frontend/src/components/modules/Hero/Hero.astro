@@ -5,6 +5,7 @@ import Media from "@/components/elements/Media/Media.astro";
 import Cta from "@/components/elements/Cta/Cta.astro";
 import type { Hero } from "@/lib/schemas/page";
 import type { SemanticLevel } from "@/lib/types";
+import Section from "@/components/elements/Section/Section.astro";
 
 interface Props {
   hero: Hero;
@@ -17,7 +18,7 @@ const { hero, lazyLoad = true, semanticLevel = "h1" } = Astro.props;
 const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
 ---
 
-<section class={`hero hero--${theme}`}>
+<Section class:list={["hero", theme && `hero--${theme}`]}>
   <div class="hero__container">
     {
       media && (
@@ -65,7 +66,7 @@ const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
       <my-counter></my-counter>
     </div>
   </div>
-</section>
+</Section>
 
 <script>
   import "./Hero.tsx";
@@ -73,8 +74,6 @@ const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
 
 <style>
   .hero {
-    padding: 6rem 2rem;
-    width: 100%;
     min-height: 60vh;
     display: flex;
     align-items: center;
@@ -175,7 +174,6 @@ const { theme = "light", eyebrow, title, subhead, body, media, cta } = hero;
   /* Responsive styles */
   @media (max-width: 768px) {
     .hero {
-      padding: 4rem 1.5rem;
       min-height: 50vh;
     }
 

@@ -4,6 +4,7 @@ import RichTextHeading from "@/components/elements/Heading/RichTextHeading.astro
 import Cta from "@/components/elements/Cta/Cta.astro";
 import type { Headline } from "@/lib/schemas/page";
 import type { SemanticLevel } from "@/lib/types";
+import Section from "@/components/elements/Section/Section.astro";
 
 interface Props {
   headline: Headline;
@@ -24,7 +25,12 @@ const {
 } = headline;
 ---
 
-<section class={`headline headline--${theme} headline--align-${alignment}`}>
+<Section
+  class:list={[
+    theme && `headline--${theme}`,
+    alignment && `headline--align-${alignment}`,
+  ]}
+>
   <div class="headline__container">
     <div class="headline__content">
       {eyebrow && <p class="headline__eyebrow">{eyebrow}</p>}
@@ -62,14 +68,9 @@ const {
       }
     </div>
   </div>
-</section>
+</Section>
 
 <style>
-  .headline {
-    padding: 4rem 2rem;
-    width: 100%;
-  }
-
   .headline--light {
     background-color: #ffffff;
     color: #333333;
@@ -182,10 +183,6 @@ const {
 
   /* Responsive styles */
   @media (max-width: 768px) {
-    .headline {
-      padding: 3rem 1.5rem;
-    }
-
     .headline__title :global(h2) {
       font-size: 2rem;
     }

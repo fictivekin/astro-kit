@@ -5,6 +5,7 @@ import Card from "@/components/elements/Card/Card.astro";
 import Cta from "@/components/elements/Cta/Cta.astro";
 import type { Multicard } from "@/lib/schemas/page";
 import type { SemanticLevel } from "@/lib/types";
+import Section from "@/components/elements/Section/Section.astro";
 
 interface Props {
   multicard: Multicard;
@@ -27,7 +28,12 @@ const {
 } = multicard;
 ---
 
-<section class={`multicard multicard--${theme} multicard--${layout}`}>
+<Section
+  class:list={[
+    theme && `multicard--${theme}`,
+    layout && `multicard--${layout}`,
+  ]}
+>
   <div class="multicard__container">
     {
       (eyebrow || title || subhead || body || (cta && cta.length > 0)) && (
@@ -69,14 +75,9 @@ const {
       }
     </div>
   </div>
-</section>
+</Section>
 
 <style>
-  .multicard {
-    padding: 4rem 2rem;
-    width: 100%;
-  }
-
   .multicard--light {
     background-color: #ffffff;
     color: #333333;
@@ -185,10 +186,6 @@ const {
   }
 
   @media (max-width: 768px) {
-    .multicard {
-      padding: 3rem 1.5rem;
-    }
-
     .multicard__header {
       margin-bottom: 2rem;
     }
