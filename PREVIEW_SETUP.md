@@ -8,13 +8,13 @@ The preview system consists of three main components:
 
 1. **Preview Sanity Client** (`frontend/src/lib/sanityPreview.ts`) - A dedicated Sanity client configured to fetch draft content
 2. **Preview Queries** (`frontend/src/lib/queries/preview.ts`) - Functions to fetch content by slug and type with draft support
-3. **Preview Page** (`frontend/src/pages/preview/preview.astro`) - An SSR endpoint that renders content on-demand
+3. **Preview Page** (`frontend/src/pages/preview/index.astro`) - An SSR endpoint that renders content on-demand
 4. **Preview Pane Configuration** (`studio/src/structure/previewPane.ts`) - Configures the iframe in Sanity Studio
 
 ## How It Works
 
 1. When a content editor opens a document in Sanity Studio, the preview pane loads an iframe
-2. The iframe URL points to `/preview/preview?secret=xxx&slug=xxx&type=xxx`
+2. The iframe URL points to `/preview/?secret=xxx&slug=xxx&type=xxx`
 3. The preview page validates the secret token for security
 4. The preview page fetches the content using the preview client (which fetches drafts via `perspective: 'previewDrafts'`)
 5. The content is rendered using the appropriate component (SectionRenderer for pages, post layout for posts)
@@ -103,7 +103,7 @@ To add support for more content types:
 
 1. Add the type to `previewableTypes` in `studio/src/structure/previewPane.ts`
 2. Add a case for the type in `fetchPreviewContent()` in `frontend/src/lib/queries/preview.ts`
-3. Add rendering logic in `frontend/src/pages/preview/preview.astro`
+3. Add rendering logic in `frontend/src/pages/preview/index.astro`
 
 ## Security
 
@@ -159,13 +159,13 @@ The preview client uses:
 Preview URLs follow this pattern:
 
 ```
-/preview/preview?secret={SECRET}&slug={SLUG}&type={TYPE}
+/preview/?secret={SECRET}&slug={SLUG}&type={TYPE}
 ```
 
 Example:
 
 ```
-/preview/preview?secret=abc123&slug=about&type=page
+/preview/?secret=abc123&slug=about&type=page
 ```
 
 ### Special Cases

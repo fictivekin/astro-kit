@@ -38,7 +38,7 @@ const getPreviewUrl = (doc: any) => {
     type: doc._type,
   })
 
-  return `${previewUrl}/preview/preview?${params.toString()}`
+  return `${previewUrl}/preview/?${params.toString()}`
 }
 
 export const viewConfiguration = (S: StructureBuilder, type: string, documentId: string) => {
