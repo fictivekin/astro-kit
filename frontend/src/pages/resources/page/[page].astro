@@ -3,7 +3,6 @@ import Layout from "@/layouts/Layout.astro";
 import PostCard from "@/components/elements/PostCard/PostCard.astro";
 import Pagination from "@/components/elements/Pagination/Pagination.astro";
 import { getCollection } from "astro:content";
-import sanityClient from "@/lib/sanity";
 import { POSTS_PER_PAGE } from "@/lib/constants";
 
 export const prerender = true;
@@ -35,14 +34,7 @@ const endIndex = startIndex + POSTS_PER_PAGE;
 const posts = allPosts.slice(startIndex, endIndex);
 
 // Get all topics for filter navigation
-const topics = await sanityClient.fetch<
-  Array<{ slug: { current: string }; title: string }>
->(
-  `*[_type == "topic"] | order(title asc) {
-    slug,
-    title
-  }`
-);
+const topics = await getCollection("topics");
 ---
 
 <Layout>
@@ -65,10 +57,10 @@ const topics = await sanityClient.fetch<
               </a>
               {topics.map((topic) => (
                 <a
-                  href={`/resources/topic/${topic.slug.current}`}
+                  href={`/resources/topic/${topic.data.slug.current}`}
                   class="resources-page__topic-link"
                 >
-                  {topic.title}
+                  {topic.data.title}
                 </a>
               ))}
             </div>

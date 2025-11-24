@@ -2,7 +2,6 @@
 import Layout from "@/layouts/Layout.astro";
 import PostCard from "@/components/elements/PostCard/PostCard.astro";
 import Pagination from "@/components/elements/Pagination/Pagination.astro";
-import sanityClient from "@/lib/sanity";
 import { getCollection } from "astro:content";
 import { POSTS_PER_PAGE } from "@/lib/constants";
 
@@ -12,18 +11,11 @@ const currentPage = 1;
 
 // Get all topics for static generation
 export async function getStaticPaths() {
-  const topics = await sanityClient.fetch<
-    Array<{ slug: { current: string }; title: string }>
-  >(
-    `*[_type == "topic"] {
-      slug,
-      title
-    }`
-  );
+  const topics = await getCollection("topics");
 
   return topics.map((topic) => ({
-    params: { topic: topic.slug.current },
-    props: { topicTitle: topic.title },
+    params: { topic: topic.data.slug.current },
+    props: { topicTitle: topic.data.title },
   }));
 }
 

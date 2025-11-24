@@ -2,7 +2,6 @@
 import Layout from "@/layouts/Layout.astro";
 import PostCard from "@/components/elements/PostCard/PostCard.astro";
 import Pagination from "@/components/elements/Pagination/Pagination.astro";
-import sanityClient from "@/lib/sanity";
 import { getCollection } from "astro:content";
 import { POSTS_PER_PAGE } from "@/lib/constants";
 
@@ -10,30 +9,23 @@ export const prerender = true;
 
 // Get all topics and generate paths for all pages
 export async function getStaticPaths() {
-  const topics = await sanityClient.fetch<
-    Array<{ slug: { current: string }; title: string }>
-  >(
-    `*[_type == "topic"] {
-      slug,
-      title
-    }`
-  );
+  const topics = await getCollection("topics");
 
   const paths = [];
 
   for (const topic of topics) {
-    const posts = await getCollection(`posts-${topic.slug.current}` as any);
+    const posts = await getCollection(`posts-${topic.data.slug.current}` as any);
     const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
 
     // Generate paths for pages 2 and onwards (page 1 is at /resources/topic/{topic})
     for (let i = 2; i <= totalPages; i++) {
       paths.push({
         params: {
-          topic: topic.slug.current,
+          topic: topic.data.slug.current,
           page: String(i),
         },
         props: {
-          topicTitle: topic.title,
+          topicTitle: topic.data.title,
         },
       });
     }

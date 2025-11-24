@@ -11,6 +11,7 @@ import { pageZ } from "@/lib/schemas/page";
 import { postZ } from "@/lib/schemas/post";
 import { mainNavigationZ, footerNavigationZ } from "@/lib/schemas/navigation";
 import { siteSettingsZ } from "@/lib/schemas/siteSettings";
+import { topicZ } from "@/lib/schemas/topic";
 
 // Home collection - single entry for homepage
 const homeCollection = defineCollection({
@@ -76,6 +77,32 @@ const postsCollection = defineCollection({
     }));
   },
   schema: postZ,
+});
+
+// Topics collection - all topics
+const topicsCollection = defineCollection({
+  loader: async () => {
+    const topics = await sanityClient.fetch<
+      Array<{ _id: string; slug: { current: string }; title: string }>
+    >(
+      `*[_type == "topic"] | order(title asc) {
+        _id,
+        _type,
+        slug,
+        title
+      }`
+    );
+
+    if (!topics || topics.length === 0) {
+      return [];
+    }
+
+    return topics.map((topic) => ({
+      id: topic.slug.current,
+      ...topic,
+    }));
+  },
+  schema: topicZ,
 });
 
 // Fetch all topics and create collections dynamically
@@ -175,6 +202,7 @@ export const collections = {
   home: homeCollection,
   pages: pagesCollection,
   posts: postsCollection,
+  topics: topicsCollection,
   mainNavigation: mainNavigationCollection,
   footerNavigation: footerNavigationCollection,
   siteSettings: siteSettingsCollection,
