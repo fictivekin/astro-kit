@@ -5,11 +5,12 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "netlify dev",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",
+    "@astrojs/netlify": "^6.6.2",
     "@astrojs/node": "^9.5.1",
     "@astrojs/sitemap": "^3.6.0",
     "@astrojs/solid-js": "^5.1.3",

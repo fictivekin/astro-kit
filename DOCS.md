@@ -11,6 +11,10 @@ This project uses Astro Content Collections with custom loaders to fetch data fr
 Create a `.env` file in the `frontend/` directory with the following variables:
 
 ```env
+# Site URL - Used for sitemap generation and canonical URLs
+# Development: http://localhost:4321
+# QA: https://fkastrokit.netlify.app
+
 # Sanity API Token for reading draft content in preview mode
 # Get this from: https://sanity.io/manage/project/{projectId}/api/tokens
 # Permissions required: Viewer role or custom role with read access
