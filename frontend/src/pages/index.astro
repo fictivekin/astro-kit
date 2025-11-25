@@ -3,6 +3,8 @@ import Layout from "@/layouts/Layout.astro";
 import SectionRenderer from "@/components/SectionRenderer.astro";
 import { getEntry } from "astro:content";
 
+export const prerender = true;
+
 const homepage = await getEntry("home", "homepage");
 const page = homepage?.data;
 ---
