@@ -72,6 +72,18 @@ const sectionFields = `
         ${linkFields}
       }
     }
+  },
+  _type == "stats" => {
+    _type,
+    eyebrow,
+    "title": coalesce(title, []),
+    "subhead": coalesce(subhead, []),
+    "body": coalesce(body, []),
+    ${cta},
+    statsItems[] {
+      value,
+      label
+    }
   }
 `;
 

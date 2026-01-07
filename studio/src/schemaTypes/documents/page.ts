@@ -19,6 +19,7 @@ export const pageSectionTypes = [
     {type: 'hubspotForm'},
     {type: 'hero'},
     {type: 'secondaryHero'},
+    {type: 'stats'},
     {type: 'list'},
     {type: 'logoCloud'},
     {type: 'multicard'},

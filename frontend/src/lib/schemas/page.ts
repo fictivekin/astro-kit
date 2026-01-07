@@ -155,6 +155,23 @@ const multicardZ = z.object({
   multicardItems: z.array(multicardItemZ).optional().nullable(),
 });
 
+// Stats item
+const statsItemZ = z.object({
+  value: z.string(),
+  label: z.string(),
+});
+
+// Stats section
+const statsZ = z.object({
+  _type: z.literal('stats'),
+  eyebrow: z.string().optional().nullable(),
+  title: portableTextZ,
+  subhead: portableTextZ,
+  body: portableTextZ,
+  cta: z.array(ctaZ).optional().nullable(),
+  statsItems: z.array(statsItemZ).optional().nullable(),
+});
+
 // Union schema for all section types using discriminated union on _type
 const sectionZ = z.discriminatedUnion('_type', [
   ctaBannerZ,
@@ -162,6 +179,7 @@ const sectionZ = z.discriminatedUnion('_type', [
   headlineZ,
   heroZ,
   multicardZ,
+  statsZ,
 ]);
 
 // Page schema - top-level page object matching GROQ query structure
@@ -191,6 +209,8 @@ export type Hero = z.infer<typeof heroZ>;
 export type Multicard = z.infer<typeof multicardZ>;
 export type MulticardItem = z.infer<typeof multicardItemZ>;
 export type MulticardLink = z.infer<typeof multicardLinkZ>;
+export type Stats = z.infer<typeof statsZ>;
+export type StatsItem = z.infer<typeof statsItemZ>;
 export type Media = z.infer<typeof mediaZ>;
 export type Cta = z.infer<typeof ctaZ>;
 export type PortableText = z.infer<typeof portableTextZ>;
@@ -203,6 +223,8 @@ export {
   multicardZ,
   multicardItemZ,
   multicardLinkZ,
+  statsZ,
+  statsItemZ,
   sectionZ,
 };
 

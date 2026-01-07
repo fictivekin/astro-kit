@@ -3,6 +3,7 @@ import Feature from "@/components/modules/Feature/Feature.astro";
 import Headline from "@/components/modules/Headline/Headline.astro";
 import Hero from "@/components/modules/Hero/Hero.astro";
 import Multicard from "@/components/modules/Multicard/Multicard.astro";
+import Stats from "@/components/modules/Stats/Stats.astro";
 
 export const componentMap: Record<string, any> = {
   ctaBanner: CtaBanner,
@@ -10,6 +11,7 @@ export const componentMap: Record<string, any> = {
   headline: Headline,
   hero: Hero,
   multicard: Multicard,
+  stats: Stats,
   // Add more components here as you create them
 };
 
