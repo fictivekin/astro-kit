@@ -1,0 +1,181 @@
+---
+import { PortableText } from "astro-portabletext";
+import StringTextHeading from "@/components/elements/Heading/StringTextHeading.astro";
+import Cta from "@/components/elements/Cta/Cta.astro";
+import Feature from "@/components/modules/Feature/Feature.astro";
+import Section from "@/components/elements/Section/Section.astro";
+import type { FeatureStack, FeatureStackItem } from "@/lib/schemas/page";
+import type { SemanticLevel } from "@/lib/types";
+
+interface Props {
+  featureStack: FeatureStack;
+  lazyLoad?: boolean;
+  semanticLevel?: SemanticLevel;
+}
+
+const { featureStack, lazyLoad = true, semanticLevel = "h2" } = Astro.props;
+
+const {
+  theme = "light",
+  eyebrow,
+  title,
+  subhead,
+  body,
+  cta,
+  features = [],
+  textAlignment,
+} = featureStack;
+
+// Determine if we have headline content to show
+const hasHeadline =
+  eyebrow || title || subhead?.length || body?.length || cta?.length;
+---
+
+{
+  hasHeadline && (
+    <Section
+      class:list={[
+        "feature-stack-header",
+        theme && `feature-stack-header--${theme}`,
+      ]}
+    >
+      <div class="feature-stack-header__container">
+        {eyebrow && <p class="feature-stack-header__eyebrow">{eyebrow}</p>}
+
+        {title && (
+          <div class="feature-stack-header__title">
+            <StringTextHeading text={title} semanticLevel={semanticLevel} />
+          </div>
+        )}
+
+        {subhead?.length > 0 && (
+          <div class="feature-stack-header__subhead">
+            <PortableText value={subhead} />
+          </div>
+        )}
+
+        {body?.length > 0 && (
+          <div class="feature-stack-header__body">
+            <PortableText value={body} />
+          </div>
+        )}
+
+        {cta && cta.length > 0 && (
+          <div class="feature-stack-header__cta">
+            <Cta cta={cta} />
+          </div>
+        )}
+      </div>
+    </Section>
+  )
+}
+
+{
+  features && features.length > 0 && (
+    <div
+      class:list={[
+        "feature-stack",
+        textAlignment && `feature-stack--text-${textAlignment}`,
+      ]}
+    >
+      {features.map((item: FeatureStackItem, index: number) => (
+        <Feature
+          feature={{
+            ...item,
+            _type: "feature" as const,
+            theme: theme,
+          }}
+          lazyLoad={lazyLoad || index > 0}
+          semanticLevel={hasHeadline ? "h3" : semanticLevel}
+        />
+      ))}
+    </div>
+  )
+}
+
+<style>
+  .feature-stack-header--light {
+    background-color: #ffffff;
+    color: #333333;
+  }
+
+  .feature-stack-header--dark {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .feature-stack-header__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .feature-stack-header__eyebrow {
+    font-size: 0.875rem;
+    font-weight: 300;
+    color: #5f5f5f;
+    margin: 0;
+  }
+
+  .feature-stack-header--dark .feature-stack-header__eyebrow {
+    color: #a0a0a0;
+  }
+
+  .feature-stack-header__title {
+    margin: 0;
+  }
+
+  .feature-stack-header__title :global(h1),
+  .feature-stack-header__title :global(h2) {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .feature-stack-header__subhead {
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .feature-stack-header__subhead :global(p) {
+    margin: 0;
+  }
+
+  .feature-stack-header__body {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  .feature-stack-header__body :global(p) {
+    margin: 0 0 1rem 0;
+  }
+
+  .feature-stack-header__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .feature-stack-header__cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .feature-stack-header__title :global(h1),
+    .feature-stack-header__title :global(h2) {
+      font-size: 2rem;
+    }
+
+    .feature-stack-header__subhead {
+      font-size: 1.125rem;
+    }
+
+    .feature-stack-header__body {
+      font-size: 1rem;
+    }
+  }
+</style>

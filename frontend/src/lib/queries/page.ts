@@ -84,6 +84,58 @@ const sectionFields = `
       value,
       label
     }
+  },
+  _type == "featureStack" => {
+    _type,
+    theme,
+    eyebrow,
+    title,
+    "subhead": coalesce(subhead, []),
+    "body": coalesce(body, []),
+    textAlignment,
+    ${cta},
+    features[] {
+      title,
+      "body": coalesce(body, []),
+      mediaSide,
+      ${media},
+      ${cta}
+    }
+  },
+  _type == "accordion" => {
+    _type,
+    theme,
+    layout,
+    openItems,
+    eyebrow,
+    title,
+    "subhead": coalesce(subhead, []),
+    "body": coalesce(body, []),
+    ${media},
+    items[] {
+      title,
+      "body": coalesce(body, []),
+      ${media}
+    }
+  },
+  _type == "list" => {
+    _type,
+    theme,
+    variant,
+    showIndex,
+    eyebrow,
+    title,
+    "subhead": coalesce(subhead, []),
+    "body": coalesce(body, []),
+    ${cta},
+    items[] {
+      eyebrow,
+      title,
+      "subhead": coalesce(subhead, []),
+      "body": coalesce(body, []),
+      ${cta},
+      wrapInLink
+    }
   }
 `;
 

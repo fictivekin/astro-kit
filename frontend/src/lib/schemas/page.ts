@@ -172,12 +172,82 @@ const statsZ = z.object({
   statsItems: z.array(statsItemZ).optional().nullable(),
 });
 
+// Feature Stack item (feature within a stack)
+const featureStackItemZ = z.object({
+  title: z.string().optional().nullable(),
+  body: portableTextZ,
+  mediaSide: z.string().optional().nullable(),
+  media: mediaZ,
+  cta: z.array(ctaZ).optional().nullable(),
+});
+
+// Feature Stack section
+const featureStackZ = z.object({
+  _type: z.literal('featureStack'),
+  theme: z.string().optional().nullable(),
+  eyebrow: z.string().optional().nullable(),
+  title: z.string().optional().nullable(),
+  subhead: portableTextZ,
+  body: portableTextZ,
+  textAlignment: z.string().optional().nullable(),
+  cta: z.array(ctaZ).optional().nullable(),
+  features: z.array(featureStackItemZ).optional().nullable(),
+});
+
+// Accordion item
+const accordionItemZ = z.object({
+  title: z.string().optional().nullable(),
+  body: portableTextZ,
+  media: mediaZ,
+});
+
+// Accordion section
+const accordionZ = z.object({
+  _type: z.literal('accordion'),
+  theme: z.string().optional().nullable(),
+  layout: z.string().optional().nullable(),
+  openItems: z.string().optional().nullable(),
+  eyebrow: z.string().optional().nullable(),
+  title: z.string().optional().nullable(),
+  subhead: portableTextZ,
+  body: portableTextZ,
+  media: mediaZ,
+  items: z.array(accordionItemZ).optional().nullable(),
+});
+
+// List item
+const listItemZ = z.object({
+  eyebrow: z.string().optional().nullable(),
+  title: z.string().optional().nullable(),
+  subhead: portableTextZ,
+  body: portableTextZ,
+  cta: z.array(ctaZ).optional().nullable(),
+  wrapInLink: z.boolean().optional().nullable(),
+});
+
+// List section
+const listZ = z.object({
+  _type: z.literal('list'),
+  theme: z.string().optional().nullable(),
+  variant: z.string().optional().nullable(),
+  showIndex: z.boolean().optional().nullable(),
+  eyebrow: z.string().optional().nullable(),
+  title: z.string().optional().nullable(),
+  subhead: portableTextZ,
+  body: portableTextZ,
+  cta: z.array(ctaZ).optional().nullable(),
+  items: z.array(listItemZ).optional().nullable(),
+});
+
 // Union schema for all section types using discriminated union on _type
 const sectionZ = z.discriminatedUnion('_type', [
+  accordionZ,
   ctaBannerZ,
   featureZ,
+  featureStackZ,
   headlineZ,
   heroZ,
+  listZ,
   multicardZ,
   statsZ,
 ]);
@@ -202,10 +272,16 @@ export const pageZ = z.object({
 // Export TypeScript types inferred from schemas
 export type Page = z.infer<typeof pageZ>;
 export type Section = z.infer<typeof sectionZ>;
+export type Accordion = z.infer<typeof accordionZ>;
+export type AccordionItem = z.infer<typeof accordionItemZ>;
 export type CtaBanner = z.infer<typeof ctaBannerZ>;
 export type Feature = z.infer<typeof featureZ>;
+export type FeatureStack = z.infer<typeof featureStackZ>;
+export type FeatureStackItem = z.infer<typeof featureStackItemZ>;
 export type Headline = z.infer<typeof headlineZ>;
 export type Hero = z.infer<typeof heroZ>;
+export type List = z.infer<typeof listZ>;
+export type ListItem = z.infer<typeof listItemZ>;
 export type Multicard = z.infer<typeof multicardZ>;
 export type MulticardItem = z.infer<typeof multicardItemZ>;
 export type MulticardLink = z.infer<typeof multicardLinkZ>;
@@ -216,10 +292,16 @@ export type Cta = z.infer<typeof ctaZ>;
 export type PortableText = z.infer<typeof portableTextZ>;
 
 export {
+  accordionZ,
+  accordionItemZ,
   ctaBannerZ,
   featureZ,
+  featureStackZ,
+  featureStackItemZ,
   headlineZ,
   heroZ,
+  listZ,
+  listItemZ,
   multicardZ,
   multicardItemZ,
   multicardLinkZ,

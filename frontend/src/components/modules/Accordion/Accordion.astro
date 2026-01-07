@@ -1,0 +1,315 @@
+---
+import { PortableText } from "astro-portabletext";
+import StringTextHeading from "@/components/elements/Heading/StringTextHeading.astro";
+import Media from "@/components/elements/Media/Media.astro";
+import Section from "@/components/elements/Section/Section.astro";
+import type { Accordion, AccordionItem } from "@/lib/schemas/page";
+import type { SemanticLevel } from "@/lib/types";
+
+interface Props {
+  accordion: Accordion;
+  lazyLoad?: boolean;
+  semanticLevel?: SemanticLevel;
+}
+
+const { accordion, lazyLoad = true, semanticLevel = "h2" } = Astro.props;
+
+const {
+  theme = "light",
+  layout = "normal",
+  openItems = "first",
+  eyebrow,
+  title,
+  subhead,
+  body,
+  media,
+  items = [],
+} = accordion;
+
+// Determine if we have headline content to show
+const hasHeadline = eyebrow || title || subhead?.length || body?.length;
+
+// Helper to determine if an item should be open by default
+function shouldBeOpen(index: number): boolean {
+  if (openItems === "all") return true;
+  if (openItems === "first" && index === 0) return true;
+  return false;
+}
+---
+
+<Section
+  class:list={[
+    "accordion",
+    theme && `accordion--${theme}`,
+    layout && `accordion--${layout}`,
+  ]}
+>
+  <div class="accordion__container">
+    {
+      hasHeadline && (
+        <div class="accordion__header">
+          {eyebrow && <p class="accordion__eyebrow">{eyebrow}</p>}
+
+          {title && (
+            <div class="accordion__title">
+              <StringTextHeading text={title} semanticLevel={semanticLevel} />
+            </div>
+          )}
+
+          {subhead?.length > 0 && (
+            <div class="accordion__subhead">
+              <PortableText value={subhead} />
+            </div>
+          )}
+
+          {body?.length > 0 && (
+            <div class="accordion__body">
+              <PortableText value={body} />
+            </div>
+          )}
+        </div>
+      )
+    }
+
+    {media && (
+      <div class="accordion__media">
+        <Media media={media} lazyLoad={lazyLoad} />
+      </div>
+    )}
+
+    {
+      items && items.length > 0 && (
+        <div class="accordion__items">
+          {items.map((item: AccordionItem, index: number) => (
+            <details class="accordion__item" open={shouldBeOpen(index)}>
+              <summary class="accordion__item-trigger">
+                <span class="accordion__item-title">{item.title}</span>
+                <span class="accordion__item-icon" aria-hidden="true" />
+              </summary>
+              <div class="accordion__item-content">
+                {item.body?.length > 0 && (
+                  <div class="accordion__item-body">
+                    <PortableText value={item.body} />
+                  </div>
+                )}
+                {item.media && (
+                  <div class="accordion__item-media">
+                    <Media media={item.media} lazyLoad={true} />
+                  </div>
+                )}
+              </div>
+            </details>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</Section>
+
+<style>
+  .accordion--light {
+    background-color: #ffffff;
+    color: #333333;
+  }
+
+  .accordion--dark {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .accordion__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .accordion--full .accordion__container {
+    max-width: 100%;
+  }
+
+  .accordion__header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 48rem;
+  }
+
+  .accordion__eyebrow {
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #666666;
+    margin: 0;
+  }
+
+  .accordion--dark .accordion__eyebrow {
+    color: #a0a0a0;
+  }
+
+  .accordion__title {
+    margin: 0;
+  }
+
+  .accordion__title :global(h1),
+  .accordion__title :global(h2) {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .accordion__subhead {
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .accordion__subhead :global(p) {
+    margin: 0;
+  }
+
+  .accordion__body {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  .accordion__body :global(p) {
+    margin: 0 0 1rem 0;
+  }
+
+  .accordion__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .accordion__media {
+    max-width: 40rem;
+  }
+
+  .accordion__items {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid currentColor;
+    opacity: 0.9;
+  }
+
+  .accordion__item {
+    border-bottom: 1px solid currentColor;
+    opacity: 0.9;
+  }
+
+  .accordion__item-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  .accordion__item-trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .accordion__item-trigger::marker {
+    display: none;
+    content: "";
+  }
+
+  .accordion__item-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .accordion__item-icon {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+
+  .accordion__item-icon::before,
+  .accordion__item-icon::after {
+    content: "";
+    position: absolute;
+    background-color: currentColor;
+    transition: transform 0.2s ease;
+  }
+
+  /* Horizontal line */
+  .accordion__item-icon::before {
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    transform: translateY(-50%);
+  }
+
+  /* Vertical line */
+  .accordion__item-icon::after {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+  }
+
+  /* Rotate to minus when open */
+  .accordion__item[open] .accordion__item-icon::after {
+    transform: translateX(-50%) rotate(90deg);
+  }
+
+  .accordion__item-content {
+    padding: 0 0 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .accordion__item-body {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .accordion__item-body :global(p) {
+    margin: 0 0 1rem 0;
+  }
+
+  .accordion__item-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .accordion__item-media {
+    max-width: 32rem;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .accordion__title :global(h1),
+    .accordion__title :global(h2) {
+      font-size: 2rem;
+    }
+
+    .accordion__subhead {
+      font-size: 1.125rem;
+    }
+
+    .accordion__body {
+      font-size: 1rem;
+    }
+
+    .accordion__item-title {
+      font-size: 1rem;
+    }
+
+    .accordion__item-trigger {
+      padding: 1rem 0;
+    }
+  }
+</style>
+

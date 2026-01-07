@@ -1,0 +1,15 @@
+---
+import type { SemanticLevel } from "@/lib/types";
+
+interface Props {
+  text: string;
+  semanticLevel?: SemanticLevel;
+}
+
+const { text, semanticLevel = "h2" } = Astro.props;
+
+const Tag = semanticLevel;
+---
+
+{text && <Tag>{text}</Tag>}
+
